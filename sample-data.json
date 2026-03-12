@@ -1,0 +1,224 @@
+{
+  "users": [
+    {
+      "_id": "507f1f77bcf86cd799439011",
+      "email": "john.doe@example.com",
+      "password": "$2b$10$...", 
+      "firstName": "John",
+      "lastName": "Doe",
+      "role": "student",
+      "profilePicture": "https://example.com/images/john.jpg",
+      "dateOfBirth": "1990-05-15",
+      "bio": "Aspiring software developer",
+      "createdAt": "2023-01-15T10:30:00.000Z",
+      "updatedAt": "2023-01-15T10:30:00.000Z",
+      "isActive": true,
+      "lastLoginAt": "2023-01-20T14:22:00.000Z"
+    },
+    {
+      "_id": "507f1f77bcf86cd799439012",
+      "email": "jane.smith@example.com",
+      "password": "$2b$10$...",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "role": "teacher",
+      "profilePicture": "https://example.com/images/jane.jpg",
+      "dateOfBirth": "1985-08-22",
+      "bio": "Senior web developer with 10 years of experience",
+      "createdAt": "2023-01-10T09:15:00.000Z",
+      "updatedAt": "2023-01-10T09:15:00.000Z",
+      "isActive": true,
+      "lastLoginAt": "2023-01-20T11:45:00.000Z"
+    }
+  ],
+  "courses": [
+    {
+      "_id": "607f1f77bcf86cd799439020",
+      "title": "Complete React Development Course",
+      "description": "Learn React from scratch with hands-on projects",
+      "category": "Web Development",
+      "instructorId": "507f1f77bcf86cd799439012",
+      "thumbnail": "https://example.com/thumbnails/react-course.jpg",
+      "price": 99.99,
+      "duration": 40,
+      "level": "intermediate",
+      "requirements": [
+        "Basic JavaScript knowledge",
+        "HTML and CSS fundamentals"
+      ],
+      "objectives": [
+        "Build real-world React applications",
+        "Understand state management",
+        "Deploy React apps"
+      ],
+      "curriculum": [
+        {
+          "sectionTitle": "Introduction to React",
+          "lessons": [
+            "607f1f77bcf86cd799439025",
+            "607f1f77bcf86cd799439026",
+            "607f1f77bcf86cd799439027"
+          ]
+        },
+        {
+          "sectionTitle": "Components and State",
+          "lessons": [
+            "607f1f77bcf86cd799439028",
+            "607f1f77bcf86cd799439029"
+          ]
+        }
+      ],
+      "studentsEnrolled": [
+        {
+          "userId": "507f1f77bcf86cd799439011",
+          "enrollmentDate": "2023-01-20T10:00:00.000Z",
+          "progress": 45,
+          "completedAt": null
+        }
+      ],
+      "rating": {
+        "average": 4.7,
+        "count": 128
+      },
+      "reviews": [
+        {
+          "userId": "507f1f77bcf86cd799439011",
+          "rating": 5,
+          "comment": "Excellent course, very practical!",
+          "createdAt": "2023-02-01T15:30:00.000Z"
+        }
+      ],
+      "isPublished": true,
+      "createdAt": "2023-01-05T14:20:00.000Z",
+      "updatedAt": "2023-01-05T14:20:00.000Z"
+    }
+  ],
+  "lessons": [
+    {
+      "_id": "607f1f77bcf86cd799439025",
+      "courseId": "607f1f77bcf86cd799439020",
+      "title": "What is React?",
+      "description": "Introduction to React library and its benefits",
+      "order": 1,
+      "type": "video",
+      "content": "https://example.com/videos/what-is-react.mp4",
+      "duration": 15,
+      "isPreview": true,
+      "resources": [
+        {
+          "name": "React Introduction Slides",
+          "url": "https://example.com/resources/react-intro.pdf",
+          "type": "pdf"
+        }
+      ],
+      "quizId": null,
+      "createdAt": "2023-01-04T16:45:00.000Z",
+      "updatedAt": "2023-01-04T16:45:00.000Z"
+    },
+    {
+      "_id": "607f1f77bcf86cd799439028",
+      "courseId": "607f1f77bcf86cd799439020",
+      "title": "State Management Basics",
+      "description": "Understanding component state in React",
+      "order": 4,
+      "type": "text",
+      "content": "<h2>Managing State in React</h2><p>React components have a built-in state object...</p>",
+      "duration": 25,
+      "isPreview": false,
+      "resources": [],
+      "quizId": "607f1f77bcf86cd799439035",
+      "createdAt": "2023-01-04T17:30:00.000Z",
+      "updatedAt": "2023-01-04T17:30:00.000Z"
+    }
+  ],
+  "quizzes": [
+    {
+      "_id": "607f1f77bcf86cd799439035",
+      "title": "React Fundamentals Quiz",
+      "description": "Test your knowledge of React basics",
+      "courseId": "607f1f77bcf86cd799439020",
+      "lessonId": "607f1f77bcf86cd799439028",
+      "questions": [
+        "607f1f77bcf86cd799439040",
+        "607f1f77bcf86cd799439041",
+        "607f1f77bcf86cd799439042"
+      ],
+      "timeLimit": 30,
+      "maxAttempts": 3,
+      "passingScore": 70,
+      "isActive": true,
+      "createdAt": "2023-01-04T18:00:00.000Z",
+      "updatedAt": "2023-01-04T18:00:00.000Z"
+    }
+  ],
+  "questions": [
+    {
+      "_id": "607f1f77bcf86cd799439040",
+      "quizId": "607f1f77bcf86cd799439035",
+      "questionText": "What is JSX?",
+      "type": "multiple-choice",
+      "options": [
+        {
+          "optionText": "A JavaScript extension that allows HTML-like syntax",
+          "isCorrect": true
+        },
+        {
+          "optionText": "A styling framework",
+          "isCorrect": false
+        },
+        {
+          "optionText": "A testing library",
+          "isCorrect": false
+        },
+        {
+          "optionText": "A package manager",
+          "isCorrect": false
+        }
+      ],
+      "explanation": "JSX stands for JavaScript XML and allows us to write HTML-like code in JavaScript.",
+      "points": 5,
+      "order": 1,
+      "createdAt": "2023-01-04T18:10:00.000Z",
+      "updatedAt": "2023-01-04T18:10:00.000Z"
+    }
+  ],
+  "results": [
+    {
+      "_id": "707f1f77bcf86cd799439050",
+      "userId": "507f1f77bcf86cd799439011",
+      "quizId": "607f1f77bcf86cd799439035",
+      "courseId": "607f1f77bcf86cd799439020",
+      "score": 85,
+      "totalPoints": 25,
+      "earnedPoints": 21,
+      "answers": [
+        {
+          "questionId": "607f1f77bcf86cd799439040",
+          "selectedOption": "A JavaScript extension that allows HTML-like syntax",
+          "answerText": null,
+          "isCorrect": true,
+          "pointsAwarded": 5
+        }
+      ],
+      "startedAt": "2023-01-22T10:15:00.000Z",
+      "completedAt": "2023-01-22T10:35:00.000Z",
+      "attemptNumber": 1,
+      "passed": true,
+      "createdAt": "2023-01-22T10:35:00.000Z"
+    }
+  ],
+  "certificates": [
+    {
+      "_id": "807f1f77bcf86cd799439060",
+      "userId": "507f1f77bcf86cd799439011",
+      "courseId": "607f1f77bcf86cd799439020",
+      "courseTitle": "Complete React Development Course",
+      "instructorName": "Jane Smith",
+      "issueDate": "2023-02-15T12:00:00.000Z",
+      "certificateUrl": "https://example.com/certificates/12345.pdf",
+      "verificationCode": "CERT-ABC123XYZ",
+      "isVerified": true,
+      "createdAt": "2023-02-15T12:00:00.000Z"
+    }
+  ]
+}
