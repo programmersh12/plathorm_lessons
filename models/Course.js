@@ -65,7 +65,8 @@ const courseSchema = new mongoose.Schema({
   studentsEnrolled: [{
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      required: true
     },
     enrollmentDate: {
       type: Date,
@@ -78,6 +79,11 @@ const courseSchema = new mongoose.Schema({
     completedAt: {
       type: Date,
       default: null
+    },
+    status: {
+      type: String,
+      enum: ['enrolled', 'completed', 'dropped'],
+      default: 'enrolled'
     }
   }],
   rating: {

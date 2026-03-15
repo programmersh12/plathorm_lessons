@@ -262,4 +262,314 @@ router.delete('/:id', protect, async (req, res) => {
   }
 });
 
+// @desc    Enroll in a course
+// @route   POST /api/courses/:id/enroll
+// @access  Private (Students only)
+router.post('/:id/enroll', protect, async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found'
+      });
+    }
+
+    // Check if user is already enrolled
+    const isAlreadyEnrolled = course.studentsEnrolled.some(student =>
+      student.userId.toString() === req.user.id
+    );
+
+    if (isAlreadyEnrolled) {
+      return res.status(400).json({
+        success: false,
+        message: 'You are already enrolled in this course'
+      });
+    }
+
+    // Only students can enroll in courses
+    if (req.user.role !== 'student') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only students can enroll in courses'
+      });
+    }
+
+    // Add student to course
+    course.studentsEnrolled.push({
+      userId: req.user.id
+    });
+
+    await course.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully enrolled in the course',
+      data: {
+        courseId: course._id,
+        title: course.title
+      }
+    });
+  } catch (error) {
+    console.error('Enroll in course error:', error);
+    
+    if (error.name === 'CastError') {
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Server error while enrolling in course'
+    });
+  }
+});
+
+// @desc    Unenroll from a course
+// @route   DELETE /api/courses/:id/unenroll
+// @access  Private
+router.delete('/:id/unenroll', protect, async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found'
+      });
+    }
+
+    // Find and remove student from course
+    const studentIndex = course.studentsEnrolled.findIndex(student =>
+      student.userId.toString() === req.user.id
+    );
+
+    if (studentIndex === -1) {
+      return res.status(400).json({
+        success: false,
+        message: 'You are not enrolled in this course'
+      });
+    }
+
+    // Allow the user to unenroll (student) or allow instructor/admin to remove students
+    if (
+      req.user.id !== course.studentsEnrolled[studentIndex].userId.toString() &&
+      course.instructorId.toString() !== req.user.id &&
+      req.user.role !== 'admin'
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to unenroll from this course'
+      });
+    }
+
+    course.studentsEnrolled.splice(studentIndex, 1);
+    await course.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully unenrolled from the course'
+    });
+  } catch (error) {
+    console.error('Unenroll from course error:', error);
+    
+    if (error.name === 'CastError') {
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Server error while unenrolling from course'
+    });
+  }
+});
+
+// @desc    Get user's enrolled courses
+// @route   GET /api/courses/my-courses
+// @access  Private
+router.get('/my-courses', protect, async (req, res) => {
+  try {
+    // Find courses where the user is enrolled
+    const courses = await Course.find({
+      'studentsEnrolled.userId': req.user.id
+    }).populate('instructorId', 'firstName lastName profilePicture');
+
+    res.status(200).json({
+      success: true,
+      count: courses.length,
+      data: courses
+    });
+  } catch (error) {
+    console.error('Get my courses error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching enrolled courses'
+    });
+  }
+});
+
+// @desc    Get courses by instructor
+// @route   GET /api/courses/instructor/:instructorId
+// @access  Public
+router.get('/instructor/:instructorId', async (req, res) => {
+  try {
+    const courses = await Course.find({
+      instructorId: req.params.instructorId,
+      isPublished: true
+    }).populate('instructorId', 'firstName lastName profilePicture');
+
+    res.status(200).json({
+      success: true,
+      count: courses.length,
+      data: courses
+    });
+  } catch (error) {
+    console.error('Get instructor courses error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching instructor courses'
+    });
+  }
+});
+
+// @desc    Update student progress in a course
+// @route   PUT /api/courses/:id/progress
+// @access  Private (Student only)
+router.put('/:id/progress', protect, async (req, res) => {
+  try {
+    const { progress } = req.body;
+
+    // Validate progress
+    if (typeof progress !== 'number' || progress < 0 || progress > 100) {
+      return res.status(400).json({
+        success: false,
+        message: 'Progress must be a number between 0 and 100'
+      });
+    }
+
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found'
+      });
+    }
+
+    // Check if user is enrolled in the course
+    const studentIndex = course.studentsEnrolled.findIndex(student =>
+      student.userId.toString() === req.user.id
+    );
+
+    if (studentIndex === -1) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not enrolled in this course'
+      });
+    }
+
+    // Only students can update their own progress
+    if (req.user.role !== 'student') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only students can update their progress'
+      });
+    }
+
+    // Store old progress to detect completion
+    const oldProgress = course.studentsEnrolled[studentIndex].progress;
+
+    // Update progress
+    course.studentsEnrolled[studentIndex].progress = progress;
+
+    // Mark as completed if progress is 100%
+    if (progress === 100 && !course.studentsEnrolled[studentIndex].completedAt) {
+      course.studentsEnrolled[studentIndex].status = 'completed';
+      course.studentsEnrolled[studentIndex].completedAt = Date.now();
+      
+      // Try to generate certificate automatically when course is completed
+      try {
+        const Certificate = require('../models/Certificate');
+        const certificateService = require('../services/certificateService');
+        
+        // Check if certificate already exists for this user and course
+        const existingCertificate = await Certificate.findOne({
+          userId: req.user.id,
+          courseId: req.params.id
+        });
+        
+        if (!existingCertificate) {
+          // Generate certificate with grade based on progress or other metrics
+          let grade;
+          if (progress >= 95) grade = 'A+';
+          else if (progress >= 90) grade = 'A';
+          else if (progress >= 85) grade = 'A-';
+          else if (progress >= 80) grade = 'B+';
+          else if (progress >= 75) grade = 'B';
+          else if (progress >= 70) grade = 'B-';
+          else if (progress >= 65) grade = 'C+';
+          else if (progress >= 60) grade = 'C';
+          else grade = 'F';
+          
+          // Get user info for certificate
+          const User = require('../models/User');
+          const user = await User.findById(req.user.id).select('firstName lastName email');
+          
+          // Generate certificate
+          await certificateService.generateCertificateWithGrade(
+            req.user.id,
+            req.params.id,
+            grade,
+            progress,
+            {
+              totalDuration: course.duration || 0,
+              totalLessons: course.curriculum.reduce((total, section) => total + section.lessons.length, 0),
+              completedLessons: Math.round((progress / 100) * course.curriculum.reduce((total, section) => total + section.lessons.length, 0)),
+              completionPercentage: progress
+            }
+          );
+        }
+      } catch (certError) {
+        // If certificate generation fails, log the error but don't fail the progress update
+        console.error('Error generating certificate:', certError);
+      }
+    } else if (progress < 100) {
+      course.studentsEnrolled[studentIndex].status = 'enrolled';
+      course.studentsEnrolled[studentIndex].completedAt = null;
+    }
+
+    await course.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Progress updated successfully',
+      data: {
+        courseId: course._id,
+        progress: course.studentsEnrolled[studentIndex].progress,
+        status: course.studentsEnrolled[studentIndex].status
+      }
+    });
+  } catch (error) {
+    console.error('Update progress error:', error);
+    
+    if (error.name === 'CastError') {
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Server error while updating progress'
+    });
+  }
+});
+
 module.exports = router;
