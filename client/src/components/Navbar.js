@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -18,7 +21,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo">
-          LearningPlatform
+          {t('learningPlatform', 'LearningPlatform')}
         </Link>
         
         <div className="nav-links">
@@ -26,7 +29,7 @@ const Navbar = () => {
             to="/" 
             className={`nav-link ${isActive('/') ? 'active' : ''}`}
           >
-            Home
+            {t('home', 'Home')}
           </Link>
           
           {!user ? (
@@ -35,13 +38,13 @@ const Navbar = () => {
                 to="/login" 
                 className={`nav-link ${isActive('/login') ? 'active' : ''}`}
               >
-                Login
+                {t('login', 'Login')}
               </Link>
               <Link 
                 to="/register" 
                 className={`nav-link ${isActive('/register') ? 'active' : ''}`}
               >
-                Register
+                {t('register', 'Register')}
               </Link>
             </>
           ) : (
@@ -50,26 +53,28 @@ const Navbar = () => {
                 to="/dashboard" 
                 className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
               >
-                Dashboard
+                {t('dashboard', 'Dashboard')}
               </Link>
               <Link 
                 to="/courses" 
                 className={`nav-link ${isActive('/courses') ? 'active' : ''}`}
               >
-                Courses
+                {t('courses', 'Courses')}
               </Link>
               <Link 
                 to="/profile" 
                 className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
               >
-                Profile
+                {t('profile', 'Profile')}
               </Link>
               <button onClick={handleLogout} className="btn-logout">
-                Logout
+                {t('logout', 'Logout')}
               </button>
             </>
           )}
         </div>
+        
+        <LanguageSwitcher />
       </div>
     </nav>
   );

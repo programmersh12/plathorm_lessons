@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
   const { user, loading } = useAuth();
@@ -12,6 +13,7 @@ const Profile = () => {
   });
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user) {
@@ -42,29 +44,29 @@ const Profile = () => {
     setTimeout(() => {
       setSaving(false);
       setEditing(false);
-      alert('Profile updated successfully!');
+      alert(t('profileUpdated', 'Profile updated successfully!'));
     }, 1000);
   };
 
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
-        Loading profile...
+        {t('loadingProfile', 'Loading profile...')}
       </div>
     );
   }
 
   return (
     <div>
-      <h1>Profile</h1>
+      <h1>{t('profile')}</h1>
       
       <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <h2>Personal Information</h2>
+        <h2>{t('personalInfo')}</h2>
         
         {editing ? (
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="firstName" className="form-label">First Name</label>
+              <label htmlFor="firstName" className="form-label">{t('firstName')}</label>
               <input
                 type="text"
                 id="firstName"
@@ -77,7 +79,7 @@ const Profile = () => {
             </div>
             
             <div className="form-group">
-              <label htmlFor="lastName" className="form-label">Last Name</label>
+              <label htmlFor="lastName" className="form-label">{t('lastName')}</label>
               <input
                 type="text"
                 id="lastName"
@@ -90,7 +92,7 @@ const Profile = () => {
             </div>
             
             <div className="form-group">
-              <label htmlFor="email" className="form-label">Email</label>
+              <label htmlFor="email" className="form-label">{t('email')}</label>
               <input
                 type="email"
                 id="email"
@@ -103,7 +105,7 @@ const Profile = () => {
             </div>
             
             <div className="form-group">
-              <label htmlFor="bio" className="form-label">Bio</label>
+              <label htmlFor="bio" className="form-label">{t('bio')}</label>
               <textarea
                 id="bio"
                 name="bio"
@@ -116,7 +118,7 @@ const Profile = () => {
             </div>
             
             <div className="form-group">
-              <label htmlFor="dateOfBirth" className="form-label">Date of Birth</label>
+              <label htmlFor="dateOfBirth" className="form-label">{t('dateOfBirth')}</label>
               <input
                 type="date"
                 id="dateOfBirth"
@@ -133,7 +135,7 @@ const Profile = () => {
                 className="form-button"
                 disabled={saving}
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? t('savingChanges', 'Saving...') : t('saveChanges', 'Save Changes')}
               </button>
               <button 
                 type="button" 
@@ -141,54 +143,54 @@ const Profile = () => {
                 style={{ backgroundColor: '#6c757d' }}
                 onClick={() => setEditing(false)}
               >
-                Cancel
+                {t('cancel')}
               </button>
             </div>
           </form>
         ) : (
           <div>
             <div style={{ marginBottom: '15px' }}>
-              <strong>Name:</strong> {user?.firstName} {user?.lastName}
+              <strong>{t('nameLabel', 'Name:')}</strong> {user?.firstName} {user?.lastName}
             </div>
             
             <div style={{ marginBottom: '15px' }}>
-              <strong>Email:</strong> {user?.email}
+              <strong>{t('emailLabel', 'Email:')}</strong> {user?.email}
             </div>
             
             <div style={{ marginBottom: '15px' }}>
-              <strong>Role:</strong> {user?.role}
+              <strong>{t('roleLabel', 'Role:')}</strong> {user?.role}
             </div>
             
             <div style={{ marginBottom: '15px' }}>
-              <strong>Bio:</strong> {user?.bio || 'Not provided'}
+              <strong>{t('bioLabel', 'Bio:')}</strong> {user?.bio || t('notProvided', 'Not provided')}
             </div>
             
             <div style={{ marginBottom: '15px' }}>
-              <strong>Date of Birth:</strong> {user?.dateOfBirth || 'Not provided'}
+              <strong>{t('dateOfBirthLabel', 'Date of Birth:')}</strong> {user?.dateOfBirth || t('notProvided', 'Not provided')}
             </div>
             
             <div style={{ marginBottom: '15px' }}>
-              <strong>Member Since:</strong> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+              <strong>{t('memberSinceLabel', 'Member Since:')}</strong> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : t('notAvailable', 'N/A')}
             </div>
             
             <button 
               className="form-button"
               onClick={() => setEditing(true)}
             >
-              Edit Profile
+              {t('editProfile', 'Edit Profile')}
             </button>
           </div>
         )}
       </div>
       
       <div className="card" style={{ maxWidth: '600px', margin: '20px auto 0' }}>
-        <h2>Security</h2>
+        <h2>{t('security')}</h2>
         <button 
           className="form-button"
           style={{ backgroundColor: '#dc3545' }}
-          onClick={() => alert('Change password functionality would go here')}
+          onClick={() => alert(t('changePasswordAlert', 'Change password functionality would go here'))}
         >
-          Change Password
+          {t('changePassword')}
         </button>
       </div>
     </div>

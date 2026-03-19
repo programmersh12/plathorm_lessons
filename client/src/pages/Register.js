@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const Register = () => {
   
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({
@@ -28,12 +30,12 @@ const Register = () => {
     
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      alert(t('passwordsDoNotMatch', 'Passwords do not match'));
       return;
     }
     
     if (formData.password.length < 6) {
-      alert('Password must be at least 6 characters');
+      alert(t('passwordMinLength', 'Password must be at least 6 characters'));
       return;
     }
 
@@ -57,10 +59,10 @@ const Register = () => {
 
   return (
     <div className="form-container">
-      <h2 className="form-title">Create Account</h2>
+      <h2 className="form-title">{t('createAccount')}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="firstName" className="form-label">First Name</label>
+          <label htmlFor="firstName" className="form-label">{t('firstName')}</label>
           <input
             type="text"
             id="firstName"
@@ -73,7 +75,7 @@ const Register = () => {
         </div>
         
         <div className="form-group">
-          <label htmlFor="lastName" className="form-label">Last Name</label>
+          <label htmlFor="lastName" className="form-label">{t('lastName')}</label>
           <input
             type="text"
             id="lastName"
@@ -86,7 +88,7 @@ const Register = () => {
         </div>
         
         <div className="form-group">
-          <label htmlFor="email" className="form-label">Email</label>
+          <label htmlFor="email" className="form-label">{t('email')}</label>
           <input
             type="email"
             id="email"
@@ -99,7 +101,7 @@ const Register = () => {
         </div>
         
         <div className="form-group">
-          <label htmlFor="password" className="form-label">Password</label>
+          <label htmlFor="password" className="form-label">{t('password')}</label>
           <input
             type="password"
             id="password"
@@ -112,7 +114,7 @@ const Register = () => {
         </div>
         
         <div className="form-group">
-          <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+          <label htmlFor="confirmPassword" className="form-label">{t('confirmPassword')}</label>
           <input
             type="password"
             id="confirmPassword"
@@ -125,7 +127,7 @@ const Register = () => {
         </div>
         
         <div className="form-group">
-          <label htmlFor="role" className="form-label">Role</label>
+          <label htmlFor="role" className="form-label">{t('role')}</label>
           <select
             id="role"
             name="role"
@@ -133,9 +135,9 @@ const Register = () => {
             value={formData.role}
             onChange={handleChange}
           >
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="admin">Admin</option>
+            <option value="student">{t('student')}</option>
+            <option value="teacher">{t('teacher')}</option>
+            <option value="admin">{t('admin')}</option>
           </select>
         </div>
         
@@ -144,12 +146,12 @@ const Register = () => {
           className="form-button"
           disabled={loading}
         >
-          {loading ? 'Creating Account...' : 'Register'}
+          {loading ? t('creatingAccount', 'Creating Account...') : t('register')}
         </button>
       </form>
       
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <p>Already have an account? <Link to="/login">Login here</Link></p>
+        <p>{t('alreadyHaveAccount')} <Link to="/login">{t('login')}</Link></p>
       </div>
     </div>
   );

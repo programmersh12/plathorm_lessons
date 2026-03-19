@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   // In a real app, you would fetch courses from the backend
   useEffect(() => {
@@ -11,25 +13,25 @@ const Courses = () => {
       setCourses([
         {
           id: 1,
-          title: 'Introduction to React',
+          title: t('introToReact', 'Introduction to React'),
           instructor: 'John Doe',
-          description: 'Learn the fundamentals of React and build your first application',
+          description: t('learnFundamentals', 'Learn the fundamentals of React and build your first application'),
           progress: 75,
           thumbnail: 'https://via.placeholder.com/300x200'
         },
         {
           id: 2,
-          title: 'Advanced JavaScript',
+          title: t('advancedJS', 'Advanced JavaScript'),
           instructor: 'Jane Smith',
-          description: 'Deep dive into advanced JavaScript concepts and patterns',
+          description: t('deepDiveJS', 'Deep dive into advanced JavaScript concepts and patterns'),
           progress: 30,
           thumbnail: 'https://via.placeholder.com/300x200'
         },
         {
           id: 3,
-          title: 'Node.js Backend Development',
+          title: t('nodeBackend', 'Node.js Backend Development'),
           instructor: 'Bob Johnson',
-          description: 'Build scalable backend services with Node.js and Express',
+          description: t('buildScalable', 'Build scalable backend services with Node.js and Express'),
           progress: 0,
           thumbnail: 'https://via.placeholder.com/300x200'
         }
@@ -41,14 +43,14 @@ const Courses = () => {
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
-        Loading courses...
+        {t('loadingCourses', 'Loading courses...')}
       </div>
     );
   }
 
   return (
     <div>
-      <h1>My Courses</h1>
+      <h1>{t('myCourses', 'My Courses')}</h1>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
         {courses.map(course => (
@@ -60,13 +62,13 @@ const Courses = () => {
             />
             <div style={{ padding: '15px' }}>
               <h3>{course.title}</h3>
-              <p>Instructor: {course.instructor}</p>
+              <p>{t('instructorLabel', 'Instructor:')} {course.instructor}</p>
               <p>{course.description}</p>
               
               {course.progress > 0 && (
                 <div style={{ marginTop: '10px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                    <span>Progress:</span>
+                    <span>{t('progressLabel', 'Progress:')}</span>
                     <span>{course.progress}%</span>
                   </div>
                   <div style={{ 
@@ -91,7 +93,7 @@ const Courses = () => {
                 className="form-button" 
                 style={{ marginTop: '15px', width: '100%' }}
               >
-                {course.progress > 0 ? 'Continue' : 'Start Course'}
+                {course.progress > 0 ? t('continueCourse', 'Continue') : t('startCourse', 'Start Course')}
               </button>
             </div>
           </div>

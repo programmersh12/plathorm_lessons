@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Login = () => {
   
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({
@@ -34,10 +36,10 @@ const Login = () => {
 
   return (
     <div className="form-container">
-      <h2 className="form-title">Login</h2>
+      <h2 className="form-title">{t('signInToAccount')}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="email" className="form-label">Email</label>
+          <label htmlFor="email" className="form-label">{t('email')}</label>
           <input
             type="email"
             id="email"
@@ -50,7 +52,7 @@ const Login = () => {
         </div>
         
         <div className="form-group">
-          <label htmlFor="password" className="form-label">Password</label>
+          <label htmlFor="password" className="form-label">{t('password')}</label>
           <input
             type="password"
             id="password"
@@ -67,12 +69,12 @@ const Login = () => {
           className="form-button"
           disabled={loading}
         >
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? t('loggingIn', 'Logging in...') : t('login')}
         </button>
       </form>
       
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <p>Don't have an account? <Link to="/register">Register here</Link></p>
+        <p>{t('dontHaveAccount')} <Link to="/register">{t('register')}</Link></p>
       </div>
     </div>
   );
