@@ -27,7 +27,7 @@ const quizSchema = new mongoose.Schema({
     ref: 'Question'
   }],
   timeLimit: {
-    type: Number, // in minutes
+    type: Number, // В минутах
     default: 0
   },
   maxAttempts: {
@@ -36,7 +36,7 @@ const quizSchema = new mongoose.Schema({
     min: 1
   },
   passingScore: {
-    type: Number, // percentage required to pass
+    type: Number, // Процент для прохождения
     default: 70,
     min: 0,
     max: 100
@@ -49,7 +49,7 @@ const quizSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for course to optimize queries
+// Индекс для курса для оптимизации запросов
 quizSchema.index({ courseId: 1 });
 quizSchema.index({ lessonId: 1 });
 

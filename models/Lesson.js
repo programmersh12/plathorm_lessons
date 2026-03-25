@@ -31,11 +31,11 @@ const lessonSchema = new mongoose.Schema({
     required: true
   },
   content: {
-    type: String, // HTML content or video URL
+    type: String, // HTML контент или URL видео
     required: [true, 'Lesson content is required']
   },
   duration: {
-    type: Number, // estimated duration in minutes
+    type: Number, // Ориентировочная продолжительность в минутах
     default: 0
   },
   isPreview: {
@@ -52,7 +52,7 @@ const lessonSchema = new mongoose.Schema({
       required: true
     },
     type: {
-      type: String, // 'pdf', 'doc', 'zip', etc.
+      type: String, // 'pdf', 'doc', 'zip' и т.д.
       required: true
     }
   }],
@@ -65,13 +65,13 @@ const lessonSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for course and order to optimize queries
+// Индекс для курса и порядка для оптимизации запросов
 lessonSchema.index({ courseId: 1, order: 1 });
 
-// Virtual for lesson progress
+// Виртуальное поле для прогресса урока
 lessonSchema.virtual('progress').get(function() {
-  // This would be populated based on user's interaction with the lesson
-  return 0; // Placeholder
+  // Будет заполнено на основе взаимодействия пользователя с уроком
+  return 0; // Заглушка
 });
 
 module.exports = mongoose.model('Lesson', lessonSchema);

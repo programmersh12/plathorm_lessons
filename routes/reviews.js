@@ -7,8 +7,9 @@ const ErrorResponse = require('../utils/errorResponse');
 
 const router = express.Router({ mergeParams: true });
 
-// @desc      Get reviews for a course
+// @desc      Получить отзывы для курса
 // @route     GET /api/courses/:courseId/reviews
+// @access    Public
 // @access    Public
 router.get('/', async (req, res, next) => {
   try {
@@ -37,8 +38,9 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// @desc      Add review for a course
+// @desc      Добавить отзыв для курса
 // @route     POST /api/courses/:courseId/reviews
+// @access    Private
 // @access    Private
 router.post(
   '/',

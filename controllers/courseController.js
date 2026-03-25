@@ -3,7 +3,7 @@ const User = require('../models/User');
 const APIFeatures = require('../utils/apiFeatures');
 const ErrorResponse = require('../utils/errorResponse');
 
-// @desc      Get all courses
+// @desc      Получить все курсы
 // @route     GET /api/courses
 // @access    Public
 exports.getCourses = async (req, res, next) => {
@@ -30,7 +30,7 @@ exports.getCourses = async (req, res, next) => {
   }
 };
 
-// @desc      Get single course
+// @desc      Получить один курс
 // @route     GET /api/courses/:id
 // @access    Public
 exports.getCourse = async (req, res, next) => {
@@ -47,7 +47,7 @@ exports.getCourse = async (req, res, next) => {
       return next(new ErrorResponse(`Course not found with id of ${req.params.id}`, 404));
     }
 
-    // If course is not published, only the instructor or admin can access it
+    // Если курс не опубликован, только инструктор или админ может получить доступ
     if (!course.isPublished) {
       if (req.user) {
         if (req.user.id !== course.instructorId._id.toString() && req.user.role !== 'admin') {
@@ -70,12 +70,12 @@ exports.getCourse = async (req, res, next) => {
   }
 };
 
-// @desc      Create new course
+// @desc      Создать новый курс
 // @route     POST /api/courses
-// @access    Private (Teacher or Admin only)
+// @access    Private (Только преподаватель или админ)
 exports.addCourse = async (req, res, next) => {
   try {
-    // Add instructor ID to the request body
+    // Добавить ID инструктора в тело запроса
     req.body.instructorId = req.user.id;
 
     const course = await Course.create(req.body);
@@ -89,9 +89,9 @@ exports.addCourse = async (req, res, next) => {
   }
 };
 
-// @desc      Update course
+// @desc      Обновить курс
 // @route     PUT /api/courses/:id
-// @access    Private (Course owner or Admin only)
+// @access    Private (Владелец курса или админ)
 exports.updateCourse = async (req, res, next) => {
   try {
     let course = await Course.findById(req.params.id);
@@ -100,7 +100,7 @@ exports.updateCourse = async (req, res, next) => {
       return next(new ErrorResponse(`Course not found with id of ${req.params.id}`, 404));
     }
 
-    // Only allow instructor or admin to update the course
+    // Разрешить только инструктору или админу обновлять курс
     if (course.instructorId.toString() !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse('Not authorized to update this course', 401));
     }
@@ -122,9 +122,9 @@ exports.updateCourse = async (req, res, next) => {
   }
 };
 
-// @desc      Delete course
+// @desc      Удалить курс
 // @route     DELETE /api/courses/:id
-// @access    Private (Course owner or Admin only)
+// @access    Private (Владелец курса или админ)
 exports.deleteCourse = async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
@@ -133,7 +133,7 @@ exports.deleteCourse = async (req, res, next) => {
       return next(new ErrorResponse(`Course not found with id of ${req.params.id}`, 404));
     }
 
-    // Only allow instructor or admin to delete the course
+    // Разрешить только инструктору или админу удалять курс
     if (course.instructorId.toString() !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse('Not authorized to delete this course', 401));
     }
@@ -152,9 +152,9 @@ exports.deleteCourse = async (req, res, next) => {
   }
 };
 
-// @desc      Enroll in a course
+// @desc      Записаться на курс
 // @route     POST /api/courses/:id/enroll
-// @access    Private (Students only)
+// @access    Private (Только студенты)
 exports.enrollInCourse = async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
@@ -163,7 +163,7 @@ exports.enrollInCourse = async (req, res, next) => {
       return next(new ErrorResponse(`Course not found with id of ${req.params.id}`, 404));
     }
 
-    // Check if user is already enrolled
+    // Проверить, записан ли пользователь уже на курс
     const isAlreadyEnrolled = course.studentsEnrolled.some(student =>
       student.userId.toString() === req.user.id
     );
@@ -172,12 +172,12 @@ exports.enrollInCourse = async (req, res, next) => {
       return next(new ErrorResponse('You are already enrolled in this course', 400));
     }
 
-    // Only students can enroll in courses
+    // Только студенты могут записываться на курсы
     if (req.user.role !== 'student') {
       return next(new ErrorResponse('Only students can enroll in courses', 403));
     }
 
-    // Add student to course
+    // Добавить студента на курс
     course.studentsEnrolled.push({
       userId: req.user.id
     });
@@ -200,7 +200,7 @@ exports.enrollInCourse = async (req, res, next) => {
   }
 };
 
-// @desc      Unenroll from a course
+// @desc      Отписаться от курса
 // @route     DELETE /api/courses/:id/unenroll
 // @access    Private
 exports.unenrollFromCourse = async (req, res, next) => {
@@ -211,7 +211,7 @@ exports.unenrollFromCourse = async (req, res, next) => {
       return next(new ErrorResponse(`Course not found with id of ${req.params.id}`, 404));
     }
 
-    // Find and remove student from course
+    // Найти и удалить студента из курса
     const studentIndex = course.studentsEnrolled.findIndex(student =>
       student.userId.toString() === req.user.id
     );
@@ -220,7 +220,7 @@ exports.unenrollFromCourse = async (req, res, next) => {
       return next(new ErrorResponse('You are not enrolled in this course', 400));
     }
 
-    // Allow the user to unenroll (student) or allow instructor/admin to remove students
+    // Разрешить пользователю отписаться или инструктору/админу удалить студентов
     if (
       req.user.id !== course.studentsEnrolled[studentIndex].userId.toString() &&
       course.instructorId.toString() !== req.user.id &&
@@ -244,12 +244,12 @@ exports.unenrollFromCourse = async (req, res, next) => {
   }
 };
 
-// @desc      Get user's enrolled courses
+// @desc      Получить курсы пользователя
 // @route     GET /api/courses/my-courses
 // @access    Private
 exports.getMyCourses = async (req, res, next) => {
   try {
-    // Find courses where the user is enrolled
+    // Найти курсы, на которые записан пользователь
     const courses = await Course.find({
       'studentsEnrolled.userId': req.user.id
     }).populate('instructorId', 'firstName lastName profilePicture');
@@ -264,7 +264,7 @@ exports.getMyCourses = async (req, res, next) => {
   }
 };
 
-// @desc      Get courses by instructor
+// @desc      Получить курсы преподавателя
 // @route     GET /api/courses/instructor/:instructorId
 // @access    Public
 exports.getCoursesByInstructor = async (req, res, next) => {
@@ -284,14 +284,14 @@ exports.getCoursesByInstructor = async (req, res, next) => {
   }
 };
 
-// @desc      Update student progress in a course
+// @desc      Обновить прогресс студента на курсе
 // @route     PUT /api/courses/:id/progress
-// @access    Private (Student only)
+// @access    Private (Только студент)
 exports.updateCourseProgress = async (req, res, next) => {
   try {
     const { progress } = req.body;
 
-    // Validate progress
+    // Валидировать прогресс
     if (typeof progress !== 'number' || progress < 0 || progress > 100) {
       return next(new ErrorResponse('Progress must be a number between 0 and 100', 400));
     }
@@ -302,7 +302,7 @@ exports.updateCourseProgress = async (req, res, next) => {
       return next(new ErrorResponse(`Course not found with id of ${req.params.id}`, 404));
     }
 
-    // Check if user is enrolled in the course
+    // Проверить, записан ли пользователь на курс
     const studentIndex = course.studentsEnrolled.findIndex(student =>
       student.userId.toString() === req.user.id
     );
@@ -311,18 +311,18 @@ exports.updateCourseProgress = async (req, res, next) => {
       return next(new ErrorResponse('You are not enrolled in this course', 403));
     }
 
-    // Only students can update their own progress
+    // Только студенты могут обновлять свой прогресс
     if (req.user.role !== 'student') {
       return next(new ErrorResponse('Only students can update their progress', 403));
     }
 
-    // Store old progress to detect completion
+    // Сохранить старый прогресс для определения завершения
     const oldProgress = course.studentsEnrolled[studentIndex].progress;
 
-    // Update progress
+    // Обновить прогресс
     course.studentsEnrolled[studentIndex].progress = progress;
 
-    // Mark as completed if progress is 100%
+    // Отметить как завершённый, если прогресс 100%
     if (progress === 100 && !course.studentsEnrolled[studentIndex].completedAt) {
       course.studentsEnrolled[studentIndex].status = 'completed';
       course.studentsEnrolled[studentIndex].completedAt = Date.now();
@@ -350,9 +350,9 @@ exports.updateCourseProgress = async (req, res, next) => {
   }
 };
 
-// @desc      Get course analytics
+// @desc      Получить аналитику курса
 // @route     GET /api/courses/:id/analytics
-// @access    Private (Instructor or Admin only)
+// @access    Private (Только преподаватель или админ)
 exports.getCourseAnalytics = async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
@@ -361,12 +361,12 @@ exports.getCourseAnalytics = async (req, res, next) => {
       return next(new ErrorResponse(`Course not found with id of ${req.params.id}`, 404));
     }
 
-    // Only allow instructor or admin to access analytics
+    // Разрешить только инструктору или админу доступ к аналитике
     if (course.instructorId.toString() !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse('Not authorized to access course analytics', 401));
     }
 
-    // Calculate analytics
+    // Рассчитать аналитику
     const totalEnrolled = course.studentsEnrolled.length;
     const completedStudents = course.studentsEnrolled.filter(student => student.status === 'completed').length;
     const avgProgress = totalEnrolled > 0 

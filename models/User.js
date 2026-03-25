@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
+// Схема пользователя для MongoDB
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -16,7 +17,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters'],
-    select: false // Don't include password in queries by default
+    select: false
   },
   firstName: {
     type: String,
@@ -86,26 +87,26 @@ const userSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Encrypt password before saving
+// Хук перед сохранением документа - хеширование пароля
 userSchema.pre('save', async function(next) {
-  // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
   
-  // Hash password with cost of 12
-  this.password = await bcrypt.hash(this.password, 12);
-  
-  // Set passwordChangedAt field to current time
-  this.passwordChangedAt = Date.now() - 1000; // Subtract 1 sec to ensure token is older than password change
-  
-  next();
+  try {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.passwordChangedAt = Date.now() - 1000;
+    
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
-// Method to compare password
+// Метод для сравнения паролей
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Method to check if user changed password after the token was issued
+// Метод проверки изменения пароля после выдачи токена
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
@@ -115,29 +116,25 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   return false;
 };
 
-// Method to create password reset token
+// Метод создания токена для сброса пароля
 userSchema.methods.createPasswordResetToken = function() {
-  // Create token
   const resetToken = crypto.randomBytes(32).toString('hex');
 
-  // Hash token and set resetPasswordToken field
   this.passwordResetToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
 
-  // Set expire time (10 minutes)
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
 };
 
-// Virtual for full name
+// Виртуальное поле для получения полного имени пользователя
 userSchema.virtual('fullName').get(function() {
   return `${this.firstName} ${this.lastName}`;
 });
 
-// Index for email to improve query performance
 userSchema.index({ email: 1 });
 
 module.exports = mongoose.model('User', userSchema);

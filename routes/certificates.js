@@ -10,7 +10,6 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Генерация сертификата для завершенного курса
 router.post('/generate', protect, [
   body('courseId', 'ID курса обязателен').notEmpty(),
   body('grade').optional().isIn(['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'F']),
@@ -94,7 +93,6 @@ router.post('/generate', protect, [
   }
 });
 
-// Получение сертификатов пользователя
 router.get('/my-certificates', protect, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -126,7 +124,6 @@ router.get('/my-certificates', protect, async (req, res) => {
   }
 });
 
-// Получение сертификата по ID
 router.get('/:id', protect, async (req, res) => {
   try {
     const certificate = await Certificate.findOne({
@@ -179,7 +176,6 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// Загрузка PDF сертификата
 router.get('/download/:id', protect, async (req, res) => {
   try {
     const certificate = await Certificate.findOne({
@@ -251,7 +247,6 @@ router.get('/download/:id', protect, async (req, res) => {
   }
 });
 
-// Проверка действительности сертификата
 router.get('/verify/:certificateId', async (req, res) => {
   try {
     const { certificateId } = req.params;
@@ -272,7 +267,6 @@ router.get('/verify/:certificateId', async (req, res) => {
   }
 });
 
-// Получение сертификатов для курса (только инструктор/админ)
 router.get('/course/:courseId', protect, async (req, res) => {
   try {
     const { courseId } = req.params;
@@ -331,7 +325,6 @@ router.get('/course/:courseId', protect, async (req, res) => {
   }
 });
 
-// Отзыв сертификата (только админ)
 router.put('/revoke/:id', protect, authorize('admin'), [
   body('reason', 'Причина отзыва обязательна').notEmpty()
 ], async (req, res) => {
@@ -388,7 +381,6 @@ router.put('/revoke/:id', protect, authorize('admin'), [
   }
 });
 
-// Продление срока действия сертификата
 router.put('/extend/:id', protect, authorize('admin'), [
   body('expiryDate', 'Действительная дата окончания обязательна').isISO8601()
 ], async (req, res) => {
@@ -438,6 +430,92 @@ router.put('/extend/:id', protect, authorize('admin'), [
     res.status(500).json({
       success: false,
       message: 'Ошибка сервера при продлении срока действия сертификата'
+    });
+  }
+});
+
+router.put('/diploma-settings/:courseId', protect, authorize('instructor', 'admin'), async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { instructorName, directorName, signatureText, borderColor, customText } = req.body;
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: 'Курс не найден'
+      });
+    }
+
+    const isInstructor = course.instructorId.toString() === req.user.id;
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isInstructor && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'Нет прав для изменения настроек диплома'
+      });
+    }
+
+    const settings = await certificateService.updateDiplomaSettings(courseId, {
+      instructorName,
+      directorName,
+      signatureText,
+      borderColor,
+      customText
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Настройки диплома успешно обновлены',
+      data: settings
+    });
+  } catch (error) {
+    console.error('Ошибка при обновлении настроек диплома:', error);
+    
+    if (error.name === 'CastError') {
+      return res.status(404).json({
+        success: false,
+        message: 'Курс не найден'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Ошибка сервера при обновлении настроек диплома'
+    });
+  }
+});
+
+router.get('/diploma-settings/:courseId', protect, async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    const course = await Course.findById(courseId).select('diplomaSettings');
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: 'Курс не найден'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: course.diplomaSettings || {}
+    });
+  } catch (error) {
+    console.error('Ошибка при получении настроек диплома:', error);
+    
+    if (error.name === 'CastError') {
+      return res.status(404).json({
+        success: false,
+        message: 'Курс не найден'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Ошибка сервера при получении настроек диплома'
     });
   }
 });

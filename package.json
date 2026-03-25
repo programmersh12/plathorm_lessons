@@ -1,7 +1,7 @@
 {
-  "name": "learning-platform-backend",
+  "name": "vykod-backend",
   "version": "1.0.0",
-  "description": "Backend for online learning platform",
+  "description": "Бэкенд для платформы онлайн-обучения программированию VYKOD",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,16 +9,17 @@
     "test": "jest"
   },
   "keywords": [
-    "learning",
-    "platform",
-    "education",
-    "online",
-    "course",
+    "обучение",
+    "платформа",
+    "образование",
+    "онлайн",
+    "курсы",
+    "программирование",
     "nodejs",
     "express",
     "mongodb"
   ],
-  "author": "Learning Platform Dev Team",
+  "author": "Команда разработки VYKOD",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -8,8 +8,9 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router({ mergeParams: true });
 
-// @desc    Get all quizzes for a course
+// @desc    Получить все тесты для курса
 // @route   GET /api/courses/:courseId/quizzes
+// @access  Public
 // @access  Private (Enrolled students, course instructor, or admin)
 router.get('/', protect, async (req, res) => {
   try {
@@ -64,8 +65,9 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// @desc    Get single quiz
+// @desc    Получить один тест
 // @route   GET /api/quizzes/:id
+// @access  Public
 // @access  Private (Enrolled students, course instructor, or admin)
 router.get('/:id', protect, async (req, res) => {
   try {
@@ -123,8 +125,9 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// @desc    Create new quiz
+// @desc    Создать новый тест
 // @route   POST /api/courses/:courseId/quizzes
+// @access  Private (Instructor/Admin)
 // @access  Private (Course instructor or admin only)
 router.post('/', protect, authorize('teacher', 'admin'), [
   body('title', 'Title is required').notEmpty(),
@@ -180,8 +183,9 @@ router.post('/', protect, authorize('teacher', 'admin'), [
   }
 });
 
-// @desc    Update quiz
+// @desc    Обновить тест
 // @route   PUT /api/quizzes/:id
+// @access  Private (Instructor/Admin)
 // @access  Private (Course instructor or admin only)
 router.put('/:id', protect, async (req, res) => {
   try {
@@ -242,8 +246,9 @@ router.put('/:id', protect, async (req, res) => {
   }
 });
 
-// @desc    Delete quiz
+// @desc    Удалить тест
 // @route   DELETE /api/quizzes/:id
+// @access  Private (Instructor/Admin)
 // @access  Private (Course instructor or admin only)
 router.delete('/:id', protect, async (req, res) => {
   try {

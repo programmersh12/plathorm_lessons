@@ -28,9 +28,9 @@ const questionSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     }
-  }], // for choice questions
+  }], // Для вопросов с выбором
   correctAnswer: {
-    type: mongoose.Schema.Types.Mixed // can be String, Boolean, Array, or Object depending on type
+    type: mongoose.Schema.Types.Mixed // Может быть String, Boolean, Array или Object в зависимости от типа
   },
   explanation: {
     type: String,
@@ -43,7 +43,7 @@ const questionSchema = new mongoose.Schema({
     min: 1
   },
   order: {
-    type: Number, // position in the quiz
+    type: Number, // Позиция в тесте
     required: true,
     min: 0
   }
@@ -51,12 +51,12 @@ const questionSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Method to check if an answer is correct
+// Метод проверки правильности ответа
 questionSchema.methods.checkAnswer = function(userAnswer) {
   const questionType = this.type;
   const correctAnswer = this.correctAnswer;
 
-  // Handle null/undefined answers
+  // Обработка null/undefined ответов
   if (userAnswer === undefined || userAnswer === null) {
     return { isCorrect: false, pointsEarned: 0 };
   }
@@ -65,8 +65,8 @@ questionSchema.methods.checkAnswer = function(userAnswer) {
 
   switch (questionType) {
     case 'single-choice':
-      // For single choice, userAnswer should be the option ID or text
-      // correctAnswer stores the correct option identifier
+      // Для одиночного выбора userAnswer должен быть ID опции или текстом
+      // correctAnswer хранит правильный идентификатор опции
       const singleIsCorrect = userAnswer === correctAnswer;
       result = {
         isCorrect: singleIsCorrect,
@@ -75,7 +75,7 @@ questionSchema.methods.checkAnswer = function(userAnswer) {
       break;
 
     case 'multiple-choice':
-      // For multiple choice, both should be arrays
+      // Для множественного выбора оба должны быть массивами
       const userAnswers = Array.isArray(userAnswer) ? userAnswer.sort() : [userAnswer];
       const correctAnswers = Array.isArray(correctAnswer) ? correctAnswer.sort() : [correctAnswer];
       const multiIsCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
@@ -86,7 +86,7 @@ questionSchema.methods.checkAnswer = function(userAnswer) {
       break;
 
     case 'true-false':
-      // For true-false, compare boolean values
+      // Для true-false сравниваем булевы значения
       const boolUserAnswer = Boolean(userAnswer);
       const boolCorrectAnswer = Boolean(correctAnswer);
       const tfIsCorrect = boolUserAnswer === boolCorrectAnswer;
@@ -97,11 +97,11 @@ questionSchema.methods.checkAnswer = function(userAnswer) {
       break;
 
     case 'essay':
-      // Essay questions require manual grading or AI evaluation
-      // For now, we'll store the answer but not auto-grade
+      // Эссе требуют ручной проверки или ИИ оценки
+      // Пока сохраним ответ, но не оцениваем автоматически
       result = {
-        isCorrect: null, // null indicates not auto-graded
-        pointsEarned: 0, // to be set by instructor
+        isCorrect: null, // null означает, что не оценивается автоматически
+        pointsEarned: 0, // будет установлено инструктором
         needsGrading: true
       };
       break;
@@ -113,7 +113,7 @@ questionSchema.methods.checkAnswer = function(userAnswer) {
   return result;
 };
 
-// Method to get correct answer (for admin/instructor view)
+// Метод получения правильного ответа (для админа/инструктора)
 questionSchema.methods.getCorrectAnswer = function() {
   return {
     correctAnswer: this.correctAnswer,
@@ -121,7 +121,7 @@ questionSchema.methods.getCorrectAnswer = function() {
   };
 };
 
-// Index for quiz to optimize queries
+// Индекс для теста для оптимизации запросов
 questionSchema.index({ quizId: 1 });
 
 module.exports = mongoose.model('Question', questionSchema);

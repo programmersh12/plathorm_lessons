@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 
 /**
- * Generate JWT Token
- * @param {String} id - User ID
- * @param {String} secret - JWT secret
- * @param {String} expiresIn - Expiration time
- * @returns {String} JWT Token
+ * Генерирует JWT токен
+ * @param {String} id - ID пользователя
+ * @param {String} secret - JWT секрет
+ * @param {String} expiresIn - Время истечения
+ * @returns {String} JWT токен
  */
 const generateToken = (id, secret = process.env.JWT_SECRET, expiresIn = process.env.JWT_EXPIRE || '30d') => {
   return jwt.sign({ id }, secret, {
@@ -14,41 +14,39 @@ const generateToken = (id, secret = process.env.JWT_SECRET, expiresIn = process.
 };
 
 /**
- * Verify JWT Token
- * @param {String} token - JWT Token
- * @param {String} secret - JWT secret
- * @returns {Object} Decoded token payload
+ * Проверяет JWT токен
+ * @param {String} token - JWT токен
+ * @param {String} secret - JWT секрет
+ * @returns {Object} Декодированный токен
  */
 const verifyToken = (token, secret = process.env.JWT_SECRET) => {
   return jwt.verify(token, secret);
 };
 
 /**
- * Decode JWT Token (without verification)
- * @param {String} token - JWT Token
- * @returns {Object} Decoded token payload
+ * Декодирует JWT токен (без проверки)
+ * @param {String} token - JWT токен
+ * @returns {Object} Декодированный токен
  */
 const decodeToken = (token) => {
   return jwt.decode(token);
 };
 
 /**
- * Generate refresh token
- * @param {String} id - User ID
- * @returns {String} Refresh token
+ * Генерирует refresh токен
+ * @param {String} id - ID пользователя
+ * @returns {String} Refresh токен
  */
 const generateRefreshToken = (id) => {
-  // In a real application, refresh tokens would be stored in a secure database
-  // and have longer expiration times
   return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d',
   });
 };
 
 /**
- * Get token from request header
- * @param {Object} req - Express request object
- * @returns {String|null} Token or null if not found
+ * Получает токен из заголовка запроса
+ * @param {Object} req - Объект запроса Express
+ * @returns {String|null} Токен или null
  */
 const getTokenFromHeader = (req) => {
   const authHeader = req.headers.authorization;

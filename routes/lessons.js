@@ -7,8 +7,9 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router({ mergeParams: true });
 
-// @desc    Get all lessons for a course
+// @desc    Получить все уроки для курса
 // @route   GET /api/courses/:courseId/lessons
+// @access  Public
 // @access  Private (Enrolled students, course instructor, or admin)
 router.get('/', protect, async (req, res) => {
   try {
@@ -63,8 +64,9 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// @desc    Get single lesson
+// @desc    Получить один урок
 // @route   GET /api/courses/:courseId/lessons/:id
+// @access  Public
 // @access  Private (Enrolled students, course instructor, or admin)
 router.get('/:id', protect, async (req, res) => {
   try {
@@ -131,8 +133,9 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// @desc    Create new lesson
+// @desc    Создать новый урок
 // @route   POST /api/courses/:courseId/lessons
+// @access  Private (Instructor/Admin)
 // @access  Private (Course instructor or admin only)
 router.post('/', protect, authorize('teacher', 'admin'), [
   body('title', 'Title is required').notEmpty(),
@@ -204,8 +207,9 @@ router.post('/', protect, authorize('teacher', 'admin'), [
   }
 });
 
-// @desc    Update lesson
+// @desc    Обновить урок
 // @route   PUT /api/courses/:courseId/lessons/:id
+// @access  Private (Instructor/Admin)
 // @access  Private (Course instructor or admin only)
 router.put('/:id', protect, async (req, res) => {
   try {
@@ -268,8 +272,9 @@ router.put('/:id', protect, async (req, res) => {
   }
 });
 
-// @desc    Delete lesson
+// @desc    Удалить урок
 // @route   DELETE /api/courses/:courseId/lessons/:id
+// @access  Private (Instructor/Admin)
 // @access  Private (Course instructor or admin only)
 router.delete('/:id', protect, async (req, res) => {
   try {

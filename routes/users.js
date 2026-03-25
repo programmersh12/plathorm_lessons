@@ -6,8 +6,9 @@ const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// @desc    Get all users
+// @desc    Получить всех пользователей
 // @route   GET /api/users
+// @access  Private/Admin
 // @access  Private (Admin only)
 router.get('/', protect, authorize('admin'), async (req, res) => {
   try {
@@ -53,8 +54,9 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
   }
 });
 
-// @desc    Get single user
+// @desc    Получить одного пользователя
 // @route   GET /api/users/:id
+// @access  Private
 // @access  Private
 router.get('/:id', protect, async (req, res) => {
   try {
@@ -96,8 +98,9 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// @desc    Update user
+// @desc    Обновить пользователя
 // @route   PUT /api/users/:id
+// @access  Private/Owner/Admin
 // @access  Private
 router.put('/:id', protect, [
   body('email').optional().isEmail().withMessage('Please provide a valid email'),
@@ -177,8 +180,9 @@ router.put('/:id', protect, [
   }
 });
 
-// @desc    Delete user
+// @desc    Удалить пользователя
 // @route   DELETE /api/users/:id
+// @access  Private/Admin
 // @access  Private (Admin only)
 router.delete('/:id', protect, authorize('admin'), async (req, res) => {
   try {

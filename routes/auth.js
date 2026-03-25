@@ -15,7 +15,7 @@ const { authLimiter, passwordResetLimiter } = require('../utils/rateLimiter');
 
 const router = express.Router();
 
-// @desc    Register user
+// @desc    Регистрация пользователя
 // @route   POST /api/auth/register
 // @access  Public
 router.post('/register', authLimiter, [
@@ -37,7 +37,7 @@ router.post('/register', authLimiter, [
   next();
 }, register);
 
-// @desc    Login user
+// @desc    Вход пользователя
 // @route   POST /api/auth/login
 // @access  Public
 router.post('/login', authLimiter, [
@@ -56,12 +56,12 @@ router.post('/login', authLimiter, [
   next();
 }, login);
 
-// @desc    Get current user profile
+// @desc    Получение профиля текущего пользователя
 // @route   GET /api/auth/profile
 // @access  Private
 router.get('/profile', protect, getProfile);
 
-// @desc    Update user profile
+// @desc    Обновление профиля пользователя
 // @route   PUT /api/auth/profile
 // @access  Private
 router.put('/profile', protect, [
@@ -84,7 +84,7 @@ router.put('/profile', protect, [
   next();
 }, updateProfile);
 
-// @desc    Change password
+// @desc    Изменение пароля
 // @route   PUT /api/auth/password
 // @access  Private
 router.put('/password', protect, [
@@ -103,7 +103,7 @@ router.put('/password', protect, [
   next();
 }, changePassword);
 
-// @desc    Forgot password
+// @desc    Запрос на восстановление пароля
 // @route   POST /api/auth/forgot-password
 // @access  Public
 router.post('/forgot-password', passwordResetLimiter, [
@@ -121,7 +121,7 @@ router.post('/forgot-password', passwordResetLimiter, [
   next();
 }, forgotPassword);
 
-// @desc    Reset password
+// @desc    Сброс пароля
 // @route   PATCH /api/auth/reset-password/:token
 // @access  Public
 router.patch('/reset-password/:token', passwordResetLimiter, [
@@ -139,7 +139,7 @@ router.patch('/reset-password/:token', passwordResetLimiter, [
   next();
 }, resetPassword);
 
-// @desc    Logout user
+// @desc    Выход пользователя
 // @route   POST /api/auth/logout
 // @access  Private
 router.post('/logout', protect, logout);

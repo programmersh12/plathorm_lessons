@@ -25,7 +25,7 @@ const testAnswerSchema = new mongoose.Schema({
     default: false
   },
   timeSpent: {
-    type: Number, // in seconds
+    type: Number, // В секундах
     default: 0
   },
   answeredAt: {
@@ -72,7 +72,7 @@ const testSchema = new mongoose.Schema({
     default: null
   },
   timeSpent: {
-    type: Number, // total time in seconds
+    type: Number, // Общее время в секундах
     default: 0
   },
   answers: [testAnswerSchema],
@@ -116,7 +116,7 @@ const testSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes for efficient querying
+// Индексы для эффективных запросов
 testSchema.index({ studentId: 1, quizId: 1, attemptNumber: -1 });
 testSchema.index({ studentId: 1, status: 1 });
 testSchema.index({ quizId: 1, createdAt: -1 });
@@ -127,17 +127,17 @@ testSchema.virtual('isPassed').get(function() {
   return this.passed;
 });
 
-// Pre-save middleware to calculate percentage
+// Pre-save middleware для расчёта процента
 testSchema.pre('save', function(next) {
   if (this.score.totalPoints > 0) {
     this.score.percentage = (this.score.earnedPoints / this.score.totalPoints) * 100;
-    // Round to 2 decimal places
+    // Округлить до 2 знаков после запятой
     this.score.percentage = Math.round(this.score.percentage * 100) / 100;
   }
   next();
 });
 
-// Method to calculate total score
+// Метод расчёта общего балла
 testSchema.methods.calculateScore = function() {
   let totalPoints = 0;
   let earnedPoints = 0;
@@ -167,7 +167,7 @@ testSchema.methods.calculateScore = function() {
   return this.score;
 };
 
-// Method to mark test as completed
+// Метод отметки теста как завершённого
 testSchema.methods.completeTest = function() {
   this.status = 'completed';
   this.completedAt = new Date();
@@ -175,7 +175,7 @@ testSchema.methods.completeTest = function() {
   return this;
 };
 
-// Method to check if test is passed (based on quiz passing score)
+// Метод проверки статуса прохождения (на основе проходного балла теста)
 testSchema.methods.checkPassStatus = function(passingScore = 70) {
   this.passed = this.score.percentage >= passingScore;
   return this.passed;

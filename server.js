@@ -8,22 +8,18 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
 
-// Загрузка переменных окружения
 dotenv.config();
 
-// Инициализация express приложения
 const app = express();
 
-// Импорт маршрутов
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const courseRoutes = require('./routes/courses');
 const lessonRoutes = require('./routes/lessons');
 const quizRoutes = require('./routes/quizzes');
-const testRoutes = require('./routes/tests'); // Маршруты попыток тестирования
+const testRoutes = require('./routes/tests');
 const certificateRoutes = require('./routes/certificates');
 
-// Импорт моделей для загрузки
 require('./models/User');
 require('./models/Course');
 require('./models/Lesson');
@@ -32,44 +28,70 @@ require('./models/Question');
 require('./models/Test');
 require('./models/Certificate');
 
-// Установка заголовков безопасности HTTP
 app.use(helmet());
 
-// Ограничение запросов с одного IP
 app.use('/api/', require('./utils/rateLimiter').apiLimiter);
 
-// Middleware для парсинга тела
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Санитизация данных от XSS
 app.use(xss());
 
-// Предотвращение загрязнения параметров
 app.use(hpp());
 
-// CORS
+// Настройка CORS для безопасности
+const parseAllowedOrigins = (origins) =>
+  (origins || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const allowedOrigins = [
+  ...parseAllowedOrigins(process.env.CLIENT_URL),
+  ...parseAllowedOrigins(process.env.CORS_ORIGIN),
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+];
+
+const uniqueAllowedOrigins = [...new Set(allowedOrigins)];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (uniqueAllowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
+  },
+  credentials: true,
 }));
 
-// Middleware для логирования
 app.use(morgan('combined'));
 
-// Обслуживание статических файлов из директории сертификатов
 app.use('/certificates', express.static(path.join(__dirname, 'certificates')));
 
-// API маршруты
+// API маршруты для аутентификации
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/quizzes', quizRoutes);
-app.use('/api/tests', testRoutes); // Маршруты попыток тестирования
+app.use('/api/tests', testRoutes); // Маршруты тестирования
 app.use('/api/certificates', certificateRoutes);
 
-// Эндпоинт проверки работоспособности
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -78,7 +100,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Обработчик 404
 app.all('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
@@ -86,12 +107,13 @@ app.all('*', (req, res) => {
   });
 });
 
-// Middleware глобального обработчика ошибок
+// Обработчик ошибок
 app.use(require('./utils/errorHandler'));
 
 // Подключение к MongoDB и запуск сервера
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/learning-platform';
+const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/learning-platform';
+const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/learning-platform';
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
@@ -100,7 +122,6 @@ mongoose.connect(MONGODB_URI, {
 .then(() => {
   console.log('Успешное подключение к MongoDB');
   
-  // Запуск сервера
   app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
     console.log(`Окружение: ${process.env.NODE_ENV || 'development'}`);
@@ -111,7 +132,6 @@ mongoose.connect(MONGODB_URI, {
   process.exit(1);
 });
 
-// Корректное завершение работы
 process.on('SIGINT', async () => {
   console.log('\nПолучен SIGINT. Корректное завершение работы...');
   await mongoose.connection.close();

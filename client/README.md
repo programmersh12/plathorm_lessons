@@ -1,59 +1,82 @@
-# Learning Platform Frontend
+# VYKOD — Фронтенд Платформы Онлайн-Обучения
 
-This is the React frontend for the online learning platform.
+VYKOD — современный адаптивный интерфейс платформы для изучения программирования с интерактивными курсами, реальными проектами и наставничеством.
 
-## Features
+## Возможности
 
-- User authentication (login/register)
-- JWT token management
-- Protected routes
-- Dashboard with user statistics
-- Course browsing
-- Profile management
-- Responsive design
+- **Современный UI/UX**: Чистый дизайн в сине-фиолетовой цветовой гамме
+- **Адаптивный дизайн**: Корректно работает на мобильных, планшетах и десктопах
+- **Интерактивное обучение**: Практическое написание кода с мгновенной обратной связью
+- **Управление курсами**: Структурированная организация курсов по уровням сложности
+- **Тёмная/светлая тема**: Поддержка пользовательских предпочтений с сохранением в localStorage
+- **Анимации**: Плавные взаимодействия с использованием Framer Motion
+- **Компонентная архитектура**: Переиспользуемые модули для поддержки кода
 
-## Setup
+## Технологический Стек
 
-1. Install dependencies:
-```bash
-npm install
-```
+- **React**: Функциональные компоненты с хуками
+- **Стилизация**: Tailwind CSS (utility-first подход)
+- **Анимации**: Framer Motion для плавных взаимодействий
+- **Роутинг**: React Router DOM для навигации
+- **Интернационализация**: i18next для многоязычной поддержки
+- **Управление состоянием**: React Context API
 
-2. Create a `.env` file in the root of the client directory:
-```env
-REACT_APP_API_URL=http://localhost:5000
-```
+## Компоненты
 
-3. Start the development server:
-```bash
-npm start
-```
+- **Header**: Адаптивная навигация с мобильным меню и переключателем темы
+- **Hero**: Приветственный экран с призывом к действию
+- **Features**: Карточки с преимуществами платформы
+- **Courses**: Сетка доступных курсов программирования
+- **CodePreview**: Интерактивный редактор кода с подсветкой синтаксиса
+- **Pricing**: Тарифные планы с рекомендуемой опцией
+- **Footer**: Навигация по сайту и социальные сети
 
-## Folder Structure
+## Установка
 
-```
-src/
-├── components/     # Reusable UI components
-├── context/        # React Context providers
-├── pages/          # Page components
-├── App.js          # Main application component
-├── App.css         # Global styles
-└── index.js        # Entry point
-```
+1. **Клонируйте репозиторий**
+2. **Перейдите в директорию клиента**: `cd plathorm_lessons/client`
+3. **Установите зависимости**: `npm install`
+4. **Запустите сервер разработки**: `npm start`
 
-## Key Components
+## Использование
 
-- `AuthContext`: Manages authentication state and user data
-- `ProtectedRoute`: Component that restricts access to authenticated users
-- `Navbar`: Navigation component that shows different links based on auth status
-- `Login`: Login form with authentication
-- `Register`: Registration form with validation
-- `Dashboard`: User dashboard with statistics
+Платформа организована в несколько ключевых секций:
 
-## API Integration
+1. **Главная страница**: Представление платформы с ключевыми преимуществами
+2. **Секция возможностей**: Описание особенностей VYKOD
+3. **Курсы**: Список доступных курсов программирования
+4. **Предпросмотр кода**: Демонстрация интерактивного редактора
+5. **Тарифы**: Различные уровни подписки
+6. **Подвал**: Дополнительная навигация и контактная информация
 
-The frontend communicates with the backend API at the URL specified in `REACT_APP_API_URL`. All authenticated requests include the JWT token in the Authorization header.
+## Принципы Дизайна
 
-## Environment Variables
+- **Чистый и современный**: Минималистичный интерфейс с фокусом на контент
+- **Техническая эстетика**: Программирование-ориентированный стиль
+- **Градиентный брендинг**: Сине-фиолетовый градиент в соответствии с логотипом
+- **Мягкие элементы**: Скруглённые углы и тени для дружелюбности
+- **Типографика**: Современные шрифты без засечек (Inter/Roboto)
+- **Доступность**: Правильные контрасты и состояния фокуса
 
-- `REACT_APP_API_URL`: Base URL for the backend API (defaults to http://localhost:5000)
+## Адаптивность
+
+- Подход mobile-first с прогрессивным улучшением
+- Сворачиваемая навигация на маленьких экранах
+- Гибкие сетки, адаптирующиеся под размер экрана
+- Удобные для касания интерактивные элементы
+- Оптимизированное масштабирование типографики
+
+## Кастомные Хуки
+
+- **useDarkMode**: Управление предпочтениями тёмной/светлой темы с сохранением в localStorage
+
+## Вклад в Проект
+
+1. Форкните репозиторий
+2. Создайте ветку фичи
+3. Внесите изменения
+4. Создайте pull request
+
+## Лицензия
+
+Этот проект распространяется под лицензией MIT.

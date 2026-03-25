@@ -1,13 +1,9 @@
 const authService = require('../services/authService');
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
 exports.register = async (req, res) => {
   try {
     const { firstName, lastName, email, password, role } = req.body;
 
-    // Validation
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -15,7 +11,6 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Register user via service
     const { token, user } = await authService.register({
       firstName,
       lastName,
@@ -56,14 +51,11 @@ exports.register = async (req, res) => {
   }
 };
 
-// @desc    Login user
-// @route   POST /api/auth/login
-// @access  Public
+// Обработка входа пользователя в систему
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validation
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -71,7 +63,6 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Login user via service
     const { token, user } = await authService.login(email, password);
 
     res.status(200).json({
@@ -97,12 +88,9 @@ exports.login = async (req, res) => {
   }
 };
 
-// @desc    Get current user profile
-// @route   GET /api/auth/profile
-// @access  Private
+// Получение профиля текущего пользователя
 exports.getProfile = async (req, res) => {
   try {
-    // req.user is populated by the protect middleware
     const user = await authService.getProfile(req.user.id);
 
     res.status(200).json({
@@ -126,15 +114,12 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-// @desc    Update user profile
-// @route   PUT /api/auth/profile
-// @access  Private
+// Обновление профиля пользователя
 exports.updateProfile = async (req, res) => {
   try {
     const updateData = {};
     const allowedFields = ['firstName', 'lastName', 'email', 'bio', 'dateOfBirth', 'profilePicture'];
     
-    // Only allow specific fields to be updated
     allowedFields.forEach(field => {
       if (req.body[field] !== undefined) {
         updateData[field] = req.body[field];
@@ -181,14 +166,11 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// @desc    Change password
-// @route   PUT /api/auth/password
-// @access  Private
+// Изменение пароля пользователя
 exports.changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
 
-    // Validation
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
         success: false,
@@ -235,22 +217,14 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-// @desc    Logout user
-// @route   POST /api/auth/logout
-// @access  Private
+// Выход пользователя из системы
 exports.logout = async (req, res) => {
-  // In a real application with refresh tokens, you might invalidate the refresh token here
-  // For this implementation, we just tell the client to remove the JWT from storage
-  
   res.status(200).json({
     success: true,
     message: 'Logged out successfully',
   });
 };
 
-// @desc    Forgot password
-// @route   POST /api/auth/forgot-password
-// @access  Public
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -264,14 +238,10 @@ exports.forgotPassword = async (req, res) => {
 
     const resetToken = await authService.forgotPassword(email);
 
-    // In a real application, send email with reset link
-    // For this example, we'll just return the token
-    // Email sending would be implemented with a service like nodemailer
-
     res.status(200).json({
       success: true,
       message: 'Password reset token sent',
-      resetToken, // In real app, this would be sent via email
+      resetToken,
     });
   } catch (error) {
     console.error('Forgot password error:', error);
@@ -290,9 +260,7 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-// @desc    Reset password
-// @route   PATCH /api/auth/reset-password/:token
-// @access  Public
+// Сброс пароля пользователя
 exports.resetPassword = async (req, res) => {
   try {
     const { token } = req.params;

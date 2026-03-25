@@ -121,6 +121,33 @@ const courseSchema = new mongoose.Schema({
   isPublished: {
     type: Boolean,
     default: false
+  },
+  diplomaTemplate: {
+    type: String,
+    default: null
+  },
+  diplomaSettings: {
+    instructorName: {
+      type: String,
+      default: null
+    },
+    directorName: {
+      type: String,
+      default: null
+    },
+    signatureText: {
+      type: String,
+      default: 'Подпись инструктора'
+    },
+    borderColor: {
+      r: { type: Number, default: 0 },
+      g: { type: Number, default: 0.53 },
+      b: { type: Number, default: 0.71 }
+    },
+    customText: {
+      type: String,
+      default: null
+    }
   }
 }, {
   timestamps: true,
@@ -128,17 +155,14 @@ const courseSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Index for common queries
 courseSchema.index({ category: 1, isPublished: 1 });
 courseSchema.index({ instructorId: 1 });
-courseSchema.index({ title: 'text', description: 'text' }); // Text search index
+courseSchema.index({ title: 'text', description: 'text' });
 
-// Virtual for student count
 courseSchema.virtual('studentCount').get(function() {
   return this.studentsEnrolled.length;
 });
 
-// Populate lessons in curriculum when finding courses
 courseSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'instructorId',

@@ -5,12 +5,12 @@ class APIFeatures {
   }
 
   filter() {
-    // Copy the query string to avoid mutating the original
+    // Копируем параметры запроса, чтобы не мутировать оригинальный объект
     const queryObj = { ...this.queryString };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach(el => delete queryObj[el]);
 
-    // Advanced filtering (for operators like gte, lte, etc.)
+    // Расширенная фильтрация (для операторов gte, lte и т.д.)
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 
@@ -24,7 +24,7 @@ class APIFeatures {
       const sortBy = this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {
-      // Default sort by creation date (newest first)
+      // Сортировка по умолчанию: по дате создания (новые first)
       this.query = this.query.sort('-createdAt');
     }
 
@@ -36,7 +36,7 @@ class APIFeatures {
       const fields = this.queryString.fields.split(',').join(' ');
       this.query = this.query.select(fields);
     } else {
-      // Exclude the __v field by default
+      // Исключить поле __v по умолчанию
       this.query = this.query.select('-__v');
     }
 

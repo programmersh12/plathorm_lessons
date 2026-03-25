@@ -16,18 +16,21 @@ const {
 
 const router = express.Router();
 
-// @desc    Start a new test attempt
+// @desc    Начать новую попытку теста
 // @route   POST /api/tests/start/:quizId
+// @access  Private
 // @access  Private (Students only)
 router.post('/start/:quizId', protect, startTest);
 
-// @desc    Get test details (for continuing a test)
+// @desc    Получить детали теста (для продолжения)
 // @route   GET /api/tests/:id
+// @access  Private
 // @access  Private
 router.get('/:id', protect, getTest);
 
-// @desc    Submit answer for a question
+// @desc    Ответить на вопрос
 // @route   POST /api/tests/:id/answer
+// @access  Private
 // @access  Private
 router.post('/:id/answer', protect, [
   body('questionId', 'Question ID is required').notEmpty(),
@@ -45,33 +48,39 @@ router.post('/:id/answer', protect, [
   next();
 }, submitAnswer);
 
-// @desc    Complete test and calculate final score
+// @desc    Завершить тест и рассчитать итоговый балл
 // @route   POST /api/tests/:id/complete
+// @access  Private
 // @access  Private
 router.post('/:id/complete', protect, completeTest);
 
-// @desc    Get test results with review
+// @desc    Получить результаты теста с проверкой
 // @route   GET /api/tests/:id/results
+// @access  Private
 // @access  Private
 router.get('/:id/results', protect, getTestResults);
 
-// @desc    Get student's test history for a quiz
+// @desc    Получить историю тестов студента для теста
 // @route   GET /api/tests/history/:quizId
+// @access  Private
 // @access  Private
 router.get('/history/:quizId', protect, getTestHistory);
 
-// @desc    Get all tests for a student
+// @desc    Получить все тесты студента
 // @route   GET /api/tests/my-tests
+// @access  Private
 // @access  Private
 router.get('/my-tests', protect, getMyTests);
 
-// @desc    Get all test attempts for a quiz (instructor/admin view)
+// @desc    Получить все попытки теста для теста (вид инструктора/админа)
 // @route   GET /api/tests/quiz/:quizId/attempts
+// @access  Private (Instructor/Admin)
 // @access  Private (Course instructor or admin)
 router.get('/quiz/:quizId/attempts', protect, getQuizAttempts);
 
-// @desc    Delete test attempt (admin only or student can delete their own in-progress test)
+// @desc    Удалить попытку теста (только админ или студент может удалить свою незавершённую попытку)
 // @route   DELETE /api/tests/:id
+// @access  Private
 // @access  Private
 router.delete('/:id', protect, deleteTest);
 

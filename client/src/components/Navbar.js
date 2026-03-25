@@ -1,82 +1,72 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
+import {
+  HomeIcon,
+  DashboardIcon,
+  BookOpenIcon,
+  UserIcon,
+  LogInIcon,
+  UserPlusIcon,
+  LogoutIcon,
+} from './Icons';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const location = useLocation();
-  const { t } = useTranslation();
 
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
+  const isActive = (path) =>
+    location.pathname === path || (path !== '/' && location.pathname.startsWith(`${path}/`));
 
-  const handleLogout = () => {
-    logout();
-  };
+  const guestLinks = [
+    { to: '/', label: t('home', 'Главная'), icon: HomeIcon },
+    { to: '/login', label: t('login', 'Войти'), icon: LogInIcon },
+  ];
+
+  const userLinks = [
+    { to: '/', label: t('home', 'Главная'), icon: HomeIcon },
+    { to: '/dashboard', label: t('dashboard', 'Панель управления'), icon: DashboardIcon },
+    { to: '/courses', label: t('courses', 'Курсы'), icon: BookOpenIcon },
+    { to: '/profile', label: t('profile', 'Профиль'), icon: UserIcon },
+  ];
+
+  const links = user ? userLinks : guestLinks;
 
   return (
-    <nav className="navbar">
-      <div className="nav-container">
-        <Link to="/" className="nav-logo">
-          {t('learningPlatform', 'LearningPlatform')}
+    <header className="navbar">
+      <div className="nav-wrap glass-card">
+        <Link to="/" className="brand-link" aria-label="Vykod главная">
+          <img src="/logo.png" alt="Логотип Vykod" className="brand-logo" />
+          <div>
+            <div className="brand-title">Vykod</div>
+            <div className="brand-subtitle">образовательная платформа</div>
+          </div>
         </Link>
-        
-        <div className="nav-links">
-          <Link 
-            to="/" 
-            className={`nav-link ${isActive('/') ? 'active' : ''}`}
-          >
-            {t('home', 'Home')}
-          </Link>
-          
+
+        <div className="nav-center">
+          {links.map(({ to, label, icon: Icon }) => (
+            <Link key={to} to={to} className={`nav-link ${isActive(to) ? 'active' : ''}`}>
+              <Icon size={15} />
+              <span>{label}</span>
+            </Link>
+          ))}
+
           {!user ? (
-            <>
-              <Link 
-                to="/login" 
-                className={`nav-link ${isActive('/login') ? 'active' : ''}`}
-              >
-                {t('login', 'Login')}
-              </Link>
-              <Link 
-                to="/register" 
-                className={`nav-link ${isActive('/register') ? 'active' : ''}`}
-              >
-                {t('register', 'Register')}
-              </Link>
-            </>
+            <Link to="/register" className="nav-link nav-link-cta">
+              <UserPlusIcon size={15} />
+              <span>{t('register', 'Зарегистрироваться')}</span>
+            </Link>
           ) : (
-            <>
-              <Link 
-                to="/dashboard" 
-                className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
-              >
-                {t('dashboard', 'Dashboard')}
-              </Link>
-              <Link 
-                to="/courses" 
-                className={`nav-link ${isActive('/courses') ? 'active' : ''}`}
-              >
-                {t('courses', 'Courses')}
-              </Link>
-              <Link 
-                to="/profile" 
-                className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
-              >
-                {t('profile', 'Profile')}
-              </Link>
-              <button onClick={handleLogout} className="btn-logout">
-                {t('logout', 'Logout')}
-              </button>
-            </>
+            <button type="button" onClick={logout} className="logout-btn">
+              <LogoutIcon size={15} />
+              <span>{t('logout', 'Выход')}</span>
+            </button>
           )}
         </div>
-        
-        <LanguageSwitcher />
       </div>
-    </nav>
+    </header>
   );
 };
 

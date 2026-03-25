@@ -83,14 +83,12 @@ const certificateSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Индексы для эффективного поиска
 certificateSchema.index({ userId: 1 });
 certificateSchema.index({ courseId: 1 });
 certificateSchema.index({ certificateId: 1 });
 certificateSchema.index({ verificationCode: 1 });
 certificateSchema.index({ issueDate: -1 });
 
-// Метод проверки действительности сертификата
 certificateSchema.methods.isValid = function() {
   if (this.status !== 'active') {
     return false;
@@ -103,13 +101,11 @@ certificateSchema.methods.isValid = function() {
   return true;
 };
 
-// Метод отзыва сертификата
 certificateSchema.methods.revoke = function(reason = 'Отозван') {
   this.status = 'revoked';
   return this.save();
 };
 
-// Метод продления срока действия
 certificateSchema.methods.extendExpiry = function(newExpiryDate) {
   this.expiryDate = newExpiryDate;
   return this.save();
