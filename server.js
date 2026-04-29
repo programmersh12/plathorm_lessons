@@ -113,7 +113,6 @@ app.use(require('./utils/errorHandler'));
 // Подключение к MongoDB и запуск сервера
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/learning-platform';
-const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/learning-platform';
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,

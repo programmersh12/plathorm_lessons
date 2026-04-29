@@ -21,32 +21,11 @@ const Courses = () => {
       level: "intermediate"
     },
     {
-      _id: '3',
-      title: "Node.js: серверная разработка",
-      difficulty: "Продвинутый",
-      description: "Разрабатывайте масштабируемые серверные приложения на Node.js и Express.",
-      level: "advanced"
-    },
-    {
-      _id: '4',
-      title: "Python для Data Science",
-      difficulty: "Средний",
-      description: "Изучайте анализ и визуализацию данных с помощью библиотек Python.",
-      level: "intermediate"
-    },
-    {
       _id: '5',
       title: "Разработка мобильных приложений",
       difficulty: "Продвинутый",
       description: "Создавайте кроссплатформенные мобильные приложения на React Native.",
       level: "advanced"
-    },
-    {
-      _id: '6',
-      title: "Основы веб-дизайна",
-      difficulty: "Начинающий",
-      description: "Изучайте HTML, CSS и принципы адаптивного дизайна.",
-      level: "beginner"
     }
   ];
 

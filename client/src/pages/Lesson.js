@@ -25,13 +25,114 @@ const Lesson = () => {
         '1': {
           id: 1,
           courseId: courseId,
+          title: 'Введение в JavaScript',
+          type: 'theory-practice',
+          xp: 50,
+          content: {
+            theory: {
+              title: 'Теория: Введение в JavaScript',
+              text: `JavaScript — это язык программирования, который делает веб-страницы интерактивными.
+
+Что такое JavaScript?
+JavaScript — это язык программирования, который работает в браузере и позволяет создавать динамические веб-страницы.
+
+Основные возможности:
+• Манипуляции с DOM
+• Обработка событий
+• Асинхронные запросы
+• Валидация форм
+
+Переменные в JavaScript:
+
+let name = "Алекс";
+const age = 25;
+var oldStyle = "старый стиль";
+
+Типы данных:
+• String - строки
+• Number - числа
+• Boolean - true/false
+• Array - массивы
+• Object - объекты
+• null и undefined
+
+Функции:
+
+function greet(name) {
+  return "Привет, " + name + "!";
+}
+
+// Или стрелочная функция
+const greet = (name) => \`Привет, \${name}!\`;`,
+              imageUrl: 'https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=600&h=300&fit=crop',
+              tips: [
+                'Всегда используйте const или let вместо var',
+                'Именуйте переменные понятно и описательно',
+                'Изучите разницу между let и const'
+              ]
+            },
+            practice: {
+              title: 'Практика: Основы JavaScript',
+              questions: [
+                {
+                  id: 1,
+                  question: 'Какое ключевое слово используется для объявления переменной с неизменяемым значением?',
+                  options: ['var', 'let', 'const', 'fixed'],
+                  correctAnswer: 2,
+                  explanation: 'const используется для объявления констант — переменных, значение которых нельзя изменить после присваивания.',
+                  type: 'single'
+                },
+                {
+                  id: 2,
+                  question: 'Какой тип данных НЕ существует в JavaScript?',
+                  options: ['String', 'Integer', 'Boolean', 'Object'],
+                  correctAnswer: 1,
+                  explanation: 'В JavaScript нет отдельного типа Integer. Все числа представлены типом Number.',
+                  type: 'single'
+                },
+                {
+                  id: 3,
+                  question: 'Что вернёт выражение typeof null?',
+                  options: ['null', 'undefined', 'object', 'number'],
+                  correctAnswer: 2,
+                  explanation: 'Это известная ошибка в JavaScript — typeof null возвращает "object", хотя null является примитивным значением.',
+                  type: 'single'
+                },
+                {
+                  id: 4,
+                  question: 'Какой метод используется для добавления элемента в конец массива?',
+                  options: ['pop()', 'push()', 'shift()', 'unshift()'],
+                  correctAnswer: 1,
+                  explanation: 'push() добавляет один или более элементов в конец массива и возвращает новую длину.',
+                  type: 'single'
+                },
+                {
+                  id: 5,
+                  question: 'Что такое замыкание в JavaScript?',
+                  options: [
+                    'Функция без имени',
+                    'Функция, которая имеет доступ к переменным внешней функции',
+                    'Метод закрытия браузерного окна',
+                    'Способ объединения двух массивов'
+                  ],
+                  correctAnswer: 1,
+                  explanation: 'Замыкание — это функция, которая запоминает и имеет доступ к переменным своей внешней области видимости.',
+                  type: 'single'
+                }
+              ]
+            }
+          }
+        },
+        '2': {
+          id: 2,
+          courseId: courseId,
           title: 'Основы React компонентов',
           type: 'theory-practice',
           xp: 50,
           content: {
             theory: {
               title: 'Теория: Основы React компонентов',
-              text: `React компоненты — это строительные блоки любого React приложения. Это независимые, многократно используемые части интерфейса.
+              text: `React компоненты — это строительные блоки любого React приложения.
 
 Что такое компоненты?
 Компоненты похожи на пользовательские HTML-элементы. Они позволяют разделить интерфейс на независимые, многократно используемые части.
@@ -42,33 +143,25 @@ const Lesson = () => {
 • Простые JavaScript функции
 • Возвращают JSX (HTML-подобный синтаксис)
 • Легче писать и понимать
-• Предпочтительны в современном React
 
 2️⃣ КЛАССОВЫЕ КОМПОНЕНТЫ
-• ES6 классы, расширяющие React.Component
-• Имеют больше возможностей (методы жизненного цикла)
+• ES6 классы
 • Используются в старом коде
 
-Пример функционального компонента:
+Пример:
 
 function Welcome({ name }) {
   return <h1>Привет, {name}!</h1>;
-}
-
-Ключевые моменты:
-• Компоненты получают входные данные called "props"
-• Они должны возвращать один корневой элемент
-• Имена компонентов должны начинаться с большой буквы
-• Думайте о компонентах как о LEGO-блоках!`,
+}`,
               imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=300&fit=crop',
               tips: [
                 'Всегда начинайте имена компонентов с большой буквы',
-                'Props доступны только для чтения — никогда не изменяйте их напрямую',
-                'Делайте компоненты маленькими и сфокусированными на одной задаче'
+                'Props доступны только для чтения',
+                'Делайте компоненты маленькими и сфокусированными'
               ]
             },
             practice: {
-              title: 'Практика: Проверь свои знания',
+              title: 'Практика: React компоненты',
               questions: [
                 {
                   id: 1,
@@ -80,7 +173,7 @@ function Welcome({ name }) {
                     'const MyComponent = <div>Привет</div>'
                   ],
                   correctAnswer: 0,
-                  explanation: 'Функциональные компоненты определяются как JavaScript функции, которые возвращают JSX. Они должны начинаться с большой буквы.',
+                  explanation: 'Функциональные компоненты определяются как JavaScript функции, которые возвращают JSX.',
                   type: 'single'
                 },
                 {
@@ -93,24 +186,11 @@ function Welcome({ name }) {
                     'Подключения к базе данных'
                   ],
                   correctAnswer: 1,
-                  explanation: 'Props (сокращение от properties) — это входные данные, передаваемые от родительских компонентов дочерним компонентам.',
+                  explanation: 'Props — это входные данные, передаваемые от родительских компонентов дочерним.',
                   type: 'single'
                 },
                 {
                   id: 3,
-                  question: 'Какое утверждение о React компонентах ВЕРНО?',
-                  options: [
-                    'Компоненты всегда должны быть классовыми',
-                    'Компоненты могут быть вложены в другие компоненты',
-                    'Компоненты не могут возвращать массивы',
-                    'Компоненты должны иметь метод render'
-                  ],
-                  correctAnswer: 1,
-                  explanation: 'Одна из основных концепций React — композиция: вы можете использовать компоненты внутри других компонентов для создания сложных интерфейсов.',
-                  type: 'single'
-                },
-                {
-                  id: 4,
                   question: 'Что означает JSX?',
                   options: [
                     'JavaScript XML',
@@ -119,7 +199,20 @@ function Welcome({ name }) {
                     'JavaScript Extra'
                   ],
                   correctAnswer: 0,
-                  explanation: 'JSX расшифровывается как JavaScript XML. Это позволяет писать HTML-подобный синтаксис в JavaScript.',
+                  explanation: 'JSX расшифровывается как JavaScript XML.',
+                  type: 'single'
+                },
+                {
+                  id: 4,
+                  question: 'Как вставить JavaScript переменную в JSX?',
+                  options: [
+                    '<h1>$variable</h1>',
+                    '<h1>{variable}</h1>',
+                    '<h1>{{variable}}</h1>',
+                    '<h1>${variable}</h1>'
+                  ],
+                  correctAnswer: 1,
+                  explanation: 'Используйте фигурные скобки {} для вставки JavaScript выражений в JSX.',
                   type: 'single'
                 },
                 {
@@ -132,115 +225,7 @@ function Welcome({ name }) {
                     'Только серверный рендеринг'
                   ],
                   correctAnswer: 1,
-                  explanation: 'Компоненты позволяют разделить интерфейс на независимые, многократно используемые части — как LEGO-блоки!',
-                  type: 'single'
-                }
-              ]
-            }
-          }
-        },
-        '2': {
-          id: 2,
-          courseId: courseId,
-          title: 'Основы JSX',
-          type: 'theory-practice',
-          xp: 50,
-          content: {
-            theory: {
-              title: 'Теория: Основы JSX',
-              text: `JSX — это синтаксическое расширение для JavaScript, которое позволяет писать HTML-подобную разметку внутри JavaScript файлов.
-
-Зачем нужен JSX?
-Вместо разделения разметки и логики в разные файлы, React объединяет их с помощью JSX.
-
-Основные правила JSX:
-• Возвращайте один корневой элемент
-• Закрывайте все теги (<br />, а не <br>)
-• Используйте camelCase для атрибутов
-• Используйте className вместо class
-
-Базовый пример:
-
-const element = <h1>Привет, мир!</h1>;
-
-Использование переменных:
-
-const name = "Анна";
-const element = <h1>Привет, {name}!</h1>;
-
-Использование выражений:
-
-const a = 5;
-const b = 10;
-const element = <h1>{a + b} равно 15</h1>;
-
-Использование компонентов в JSX:
-
-function Greeting({ name }) {
-  return <h1>Привет, {name}!</h1>;
-}
-
-const element = <Greeting name="Мария" />;`,
-              imageUrl: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=600&h=300&fit=crop',
-              tips: [
-                'JSX не обязателен, но делает код React чище',
-                'Используйте фигурные скобки {} для JavaScript выражений',
-                'В JSX используется className вместо class'
-              ]
-            },
-            practice: {
-              title: 'Практика: Викторина по JSX',
-              questions: [
-                {
-                  id: 1,
-                  question: 'Что означает JSX?',
-                  options: [
-                    'JavaScript XML',
-                    'Java Syntax Extension', 
-                    'JSON XML',
-                    'JavaScript Extra'
-                  ],
-                  correctAnswer: 0,
-                  explanation: 'JSX расшифровывается как JavaScript XML. Это позволяет писать HTML-подобный синтаксис в JavaScript.',
-                  type: 'single'
-                },
-                {
-                  id: 2,
-                  question: 'Как добавить CSS класс к элементу в JSX?',
-                  options: [
-                    'class="text"',
-                    'className="text"',
-                    'cssClass="text"',
-                    'style="text"'
-                  ],
-                  correctAnswer: 1,
-                  explanation: 'В JSX используется className вместо class, потому что class — это зарезервированное слово в JavaScript.',
-                  type: 'single'
-                },
-                {
-                  id: 3,
-                  question: 'Как вставить JavaScript переменную в JSX?',
-                  options: [
-                    '<h1>$variable</h1>',
-                    '<h1>{variable}</h1>',
-                    '<h1>{{variable}}</h1>',
-                    '<h1>${variable}</h1>'
-                  ],
-                  correctAnswer: 1,
-                  explanation: 'Используйте фигурные скобки {} для вставки любого JavaScript выражения в JSX.',
-                  type: 'single'
-                },
-                {
-                  id: 4,
-                  question: 'Что отрендерит этот код: const x = <div>Привет</div>?',
-                  options: [
-                    'Ошибка',
-                    'Элемент div с текстом "Привет"',
-                    'Строку "divПривет"',
-                    'Ничего'
-                  ],
-                  correctAnswer: 1,
-                  explanation: 'JSX выглядит как HTML, но создаёт React элементы. Это создаёт правильный DOM элемент.',
+                  explanation: 'Компоненты позволяют разделить интерфейс на независимые, многократно используемые части.',
                   type: 'single'
                 }
               ]
@@ -250,101 +235,107 @@ const element = <Greeting name="Мария" />;`,
         '3': {
           id: 3,
           courseId: courseId,
-          title: 'React как библиотека для UI',
+          title: 'Введение в React Native',
           type: 'theory-practice',
           xp: 50,
           content: {
             theory: {
-              title: 'Теория: React для создания пользовательских интерфейсов',
-              text: `React — это JavaScript библиотека для создания пользовательских интерфейсов, разработанная Facebook.
+              title: 'Теория: Введение в React Native',
+              text: `React Native — это фреймворк для создания мобильных приложений на JavaScript.
 
-Основные цели React:
-• Архитектура на основе компонентов
-• Декларативный подход
-• Изучи один раз, пиши везде
+Что такое React Native?
+React Native позволяет создавать нативные мобильные приложения для iOS и Android, используя JavaScript и React.
 
-На основе компонентов:
-Создавайте инкапсулированные компоненты, которые управляют своим состоянием, а затем объединяйте их для создания сложных интерфейсов.
+Преимущества:
+• Кроссплатформенность (один код для iOS и Android)
+• Использование знаний React
+• Горячая перезагрузка
+• Нативная производительность
 
-Декларативность:
-React делает безболезненным создание интерактивных интерфейсов. Создавайте простые представления для каждого состояния вашего приложения.
+Основные компоненты:
 
-Виртуальный DOM:
-React создаёт виртуальную копию DOM в памяти. Когда состояние изменяется, React сравнивает новый виртуальный DOM с предыдущим и обновляет только изменившиеся части.
+import { View, Text, StyleSheet } from 'react-native';
 
-Ключевые особенности:
-• Односторонний поток данных
-• Виртуальный DOM для производительности
-• Богатая экосистема
-• Синтаксис JSX
-• Серверный рендеринг
+function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Привет, мир!</Text>
+    </View>
+  );
+}
 
-Когда использовать React:
-• Одностраничные приложения (SPA)
-• Интерактивные дашборды
-• Приложения социальных сетей
-• Интернет-магазины
-• Любой динамичный пользовательский интерфейс`,
-              imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=300&fit=crop',
+Стили создаются с помощью StyleSheet:
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});`,
+              imageUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=300&fit=crop',
               tips: [
-                'React — это библиотека, а не фреймворк',
-                'Он фокусируется только на слое UI',
-                'Хорошо работает с другими библиотеками для маршрутизации, управления состоянием и т.д.'
+                'Используйте View вместо div',
+                'Text обязателен для отображения любого текста',
+                'Стили пишутся на camelCase (backgroundColor)'
               ]
             },
             practice: {
-              title: 'Практика: Викторина по React',
+              title: 'Практика: React Native основы',
               questions: [
                 {
                   id: 1,
-                  question: 'Для чего в основном используется React?',
+                  question: 'Что такое React Native?',
                   options: [
-                    'Backend разработка',
-                    'Управление базой данных',
-                    'Создание пользовательских интерфейсов',
-                    'Операционные системы'
+                    'Библиотека для работы с базами данных',
+                    'Фреймворк для создания мобильных приложений',
+                    'Язык программирования',
+                    'Операционная система'
                   ],
-                  correctAnswer: 2,
-                  explanation: 'React — это JavaScript библиотека, предназначенная специально для создания пользовательских интерфейсов.',
+                  correctAnswer: 1,
+                  explanation: 'React Native — это фреймворк от Facebook для создания кроссплатформенных мобильных приложений.',
                   type: 'single'
                 },
                 {
                   id: 2,
-                  question: 'Что такое Виртуальный DOM?',
-                  options: [
-                    'Физическое устройство DOM',
-                    'Облегчённая копия реального DOM в памяти',
-                    'CSS фреймворк',
-                    'Система базы данных'
-                  ],
-                  correctAnswer: 1,
-                  explanation: 'Виртуальный DOM — это концепция, при которой React хранит облегчённую копию реального DOM в памяти для лучшей производительности.',
+                  question: 'Какой компонент используется для создания контейнера в React Native?',
+                  options: ['div', 'Container', 'View', 'Box'],
+                  correctAnswer: 2,
+                  explanation: 'View — это базовый компонент-контейнер в React Native, аналог div в веб-разработке.',
                   type: 'single'
                 },
                 {
                   id: 3,
-                  question: 'Кто разработал React?',
-                  options: [
-                    'Google',
-                    'Microsoft',
-                    'Facebook (Meta)',
-                    'Amazon'
-                  ],
+                  question: 'Какой компонент ОБЯЗАТЕЛЕН для отображения текста в React Native?',
+                  options: ['Paragraph', 'Span', 'Text', 'Label'],
                   correctAnswer: 2,
-                  explanation: 'React был разработан Facebook (ныне Meta) и выпущен как open source в 2013 году.',
+                  explanation: 'В React Native весь текст должен быть обёрнут в компонент Text.',
                   type: 'single'
                 },
                 {
                   id: 4,
-                  question: 'Какой тип потока данных использует React?',
+                  question: 'Как создать стили в React Native?',
                   options: [
-                    'Двустороннее связывание',
-                    'Односторонний (направленный) поток данных',
-                    'Нет потока данных',
-                    'Случайный поток данных'
+                    'С помощью CSS файлов',
+                    'С помощью StyleSheet.create()',
+                    'Только инлайн стили',
+                    'С помощью styled-components'
                   ],
                   correctAnswer: 1,
-                  explanation: 'React использует односторонний поток данных — данные передаются от родителя к ребёнку через props.',
+                  explanation: 'StyleSheet.create() — это стандартный способ создания стилей в React Native.',
+                  type: 'single'
+                },
+                {
+                  id: 5,
+                  question: 'Какое основное преимущество React Native?',
+                  options: [
+                    'Работает только на iOS',
+                    'Один код для iOS и Android',
+                    'Требует знания Swift',
+                    'Медленнее нативных приложений'
+                  ],
+                  correctAnswer: 1,
+                  explanation: 'Главное преимущество — возможность писать один код для обеих платформ.',
                   type: 'single'
                 }
               ]

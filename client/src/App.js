@@ -4,8 +4,8 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
-import VyKodHome from './pages/VyKodHome'; // New VYKOD home page
+import Header from './components/Header';
+import VyKodHome from './pages/VyKodHome';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -24,7 +24,7 @@ function App() {
           <div className="app-shell">
             <div className="app-orb orb-violet" />
             <div className="app-orb orb-cyan" />
-            <Navbar />
+            <Header />
             <main className="main-content">
               <Routes>
   <Route path="/" element={<VyKodHome />} />

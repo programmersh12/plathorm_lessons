@@ -16,53 +16,35 @@ const CourseDetail = () => {
     setTimeout(() => {
       const mockCourse = {
         id: courseId,
-        title: courseId == 1 ? t('introToReact', 'Введение в React') : 
-               courseId == 2 ? t('advancedJS', 'Продвинутый JavaScript') : 
-               t('nodeBackend', 'Node.js: серверная разработка'),
-        instructor: courseId == 1 ? 'Иван Иванов' : 
-                   courseId == 2 ? 'Анна Смирнова' : 
-                   'Павел Соколов',
-        description: courseId == 1 ? t('learnFundamentals', 'Изучите основы React и создайте свое первое приложение') :
-                       courseId == 2 ? t('deepDiveJS', 'Глубокое погружение в продвинутые концепции и паттерны JavaScript') :
-                       t('buildScalable', 'Создавайте масштабируемые серверные сервисы с Node.js и Express'),
+        title: courseId == '1' ? t('jsBasics', 'Основы JavaScript') : 
+               courseId == '2' ? t('reactDev', 'Разработка на React') : 
+               t('mobileDev', 'Разработка мобильных приложений'),
+        instructor: courseId == '1' ? 'Алексей Петров' : 
+                   courseId == '2' ? 'Анна Смирнова' : 
+                   'Дмитрий Волков',
+        description: courseId == '1' ? t('jsDescription', 'Изучите основы JavaScript и создайте свое первое приложение') :
+                       courseId == '2' ? t('reactDescription', 'Создавайте современные веб-приложения на React') :
+                       t('mobileDescription', 'Создавайте кроссплатформенные мобильные приложения на React Native'),
         progress: 0,
         thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=300&fit=crop',
-        lessons: [
-          { 
-            id: 1, 
-            title: t('lessonTitle', 'Понимание React компонентов'), 
-            order: 1, 
-            completed: false,
-            duration: '15 мин'
-          },
-          { 
-            id: 2, 
-            title: t('theorySection', 'Теоретический раздел'), 
-            order: 2, 
-            completed: false,
-            duration: '20 мин'
-          },
-          { 
-            id: 3, 
-            title: t('practiceSection', 'Практический раздел'), 
-            order: 3, 
-            completed: false,
-            duration: '25 мин'
-          },
-          { 
-            id: 4, 
-            title: t('reactComponentQuestion', 'Практика компонентов'), 
-            order: 4, 
-            completed: false,
-            duration: '30 мин'
-          },
-          { 
-            id: 5, 
-            title: t('jsxQuestion', 'Понимание JSX'), 
-            order: 5, 
-            completed: false,
-            duration: '15 мин'
-          }
+        lessons: courseId == '1' ? [
+          { id: 1, title: 'Введение в JavaScript', order: 1, completed: false, duration: '15 мин' },
+          { id: 2, title: 'Переменные и типы данных', order: 2, completed: false, duration: '20 мин' },
+          { id: 3, title: 'Функции и области видимости', order: 3, completed: false, duration: '25 мин' },
+          { id: 4, title: 'Массивы и объекты', order: 4, completed: false, duration: '30 мин' },
+          { id: 5, title: 'DOM манипуляции', order: 5, completed: false, duration: '25 мин' }
+        ] : courseId == '2' ? [
+          { id: 1, title: 'Основы React компонентов', order: 1, completed: false, duration: '20 мин' },
+          { id: 2, title: 'JSX синтаксис', order: 2, completed: false, duration: '15 мин' },
+          { id: 3, title: 'Props и State', order: 3, completed: false, duration: '25 мин' },
+          { id: 4, title: 'Хуки в React', order: 4, completed: false, duration: '30 мин' },
+          { id: 5, title: 'Роутинг в React', order: 5, completed: false, duration: '25 мин' }
+        ] : [
+          { id: 1, title: 'Введение в React Native', order: 1, completed: false, duration: '20 мин' },
+          { id: 2, title: 'Компоненты и стили', order: 2, completed: false, duration: '25 мин' },
+          { id: 3, title: 'Навигация в мобильном приложении', order: 3, completed: false, duration: '30 мин' },
+          { id: 4, title: 'Работа с API', order: 4, completed: false, duration: '25 мин' },
+          { id: 5, title: 'Публикация приложения', order: 5, completed: false, duration: '20 мин' }
         ]
       };
       
