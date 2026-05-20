@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
 
@@ -7,57 +7,86 @@ const GoogleLoginButton = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const { login: authLogin } = useAuth();
+  const { updateUser } = useAuth();
+
+  const handleCallback = useCallback(async () => {
+    const token = searchParams.get('token');
+    const userId = searchParams.get('userId');
+    const errorParam = searchParams.get('error');
+
+    if (errorParam) {
+      setError(decodeURIComponent(errorParam));
+      window.history.replaceState({}, document.title, '/login');
+      return;
+    }
+
+    if (token && userId) {
+      setLoading(true);
+      try {
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', userId);
+
+        const response = await authAPI.getProfile();
+        const userData = response.data?.user || response.data;
+        
+        localStorage.setItem('user', JSON.stringify(userData));
+        
+        // Обновляем контекст аутентификации
+        updateUser(userData);
+        
+        // Используем window.location вместо navigate, чтобы избежать race condition
+        // с асинхронным обновлением AuthContext (setUser)
+        window.location.href = '/dashboard';
+      } catch (err) {
+        console.error('[GoogleLogin] Profile fetch error:', err);
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        setError('Failed to complete authentication');
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, [searchParams, updateUser]);
 
   useEffect(() => {
-    const handleCallback = async () => {
-      const token = searchParams.get('token');
-      const userId = searchParams.get('userId');
-      const errorParam = searchParams.get('error');
-
-      if (errorParam) {
-        setError(decodeURIComponent(errorParam));
-        window.history.replaceState({}, document.title, '/login');
-        return;
-      }
-
-      if (token && userId) {
-        setLoading(true);
-        try {
-          localStorage.setItem('token', token);
-          localStorage.setItem('userId', userId);
-
-          const response = await authAPI.getProfile();
-          const user = response.data?.user || response.data;
-          
-          localStorage.setItem('user', JSON.stringify(user));
-          
-          window.history.replaceState({}, document.title, '/dashboard');
-          navigate('/dashboard', { replace: true });
-        } catch (err) {
-          console.error('[GoogleLogin] Profile fetch error:', err);
-          localStorage.removeItem('token');
-          localStorage.removeItem('userId');
-          setError('Failed to complete authentication');
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
     handleCallback();
-  }, [searchParams, navigate]);
+  }, [handleCallback]);
 
   const handleGoogleLogin = () => {
     setError(null);
     setLoading(true);
     
-    const apiUrl = process.env.REACT_APP_API_URL || process.env.REACT_APP_SERVER_URL || 'http://localhost:5000';
-    const baseUrl = apiUrl.replace(/\/api$/, '').replace(/\/+$/, '');
+    // Используем REACT_APP_API_URL, убираем /api суффикс если есть
+    const apiUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5000').replace(/\/+$/, '');
+    const serverUrl = apiUrl.endsWith('/api') ? apiUrl.slice(0, -4) : apiUrl;
     
-    window.location.href = `${baseUrl}/api/auth/google`;
+    window.location.href = `${serverUrl}/api/auth/google`;
   };
+
+  // Если это страница callback (есть параметры token или error), не показываем кнопку входа
+  if (searchParams.get('token') || searchParams.get('error') || searchParams.get('userId')) {
+    return loading ? (
+      <button
+        disabled
+        className="google-login-btn"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '10px',
+          width: '100%',
+          padding: '12px 16px',
+          backgroundColor: '#f8f9fa',
+          border: '2px solid #e9ecef',
+          borderRadius: '8px',
+          cursor: 'not-allowed',
+          opacity: 0.7
+        }}
+      >
+        <span>Processing...</span>
+      </button>
+    ) : null;
+  }
 
   if (loading) {
     return (
