@@ -1,4 +1,4 @@
-# Plathform - MERN Stack Online Learning Platform
+# Практика "Платформа VyKOD"
 
 ![GitHub stars](https://img.shields.io/github/stars/plathform/plathorm)
 ![GitHub forks](https://img.shields.io/github/forks/plathorm/plathorm)
@@ -10,16 +10,16 @@
 
 ## Функционал
 
-- 📚 Управление курсами и уроками
-- 👨‍🏫 Система учителей и студентов
-- 💬 Real-time чат с Socket.io
-- 🎥 Видеозвонки (WebRTC)
-- 🎓 Генерация сертификатов
-- 🔐 JWT аутентификация + Google OAuth
-- 💳 Система подписок
-- 🤖 AI ассистент для студентов
-- 🌙 Dark Mode
-- 🌐 Мультиязычность (i18n)
+- Управление курсами и уроками
+- Система учителей и студентов
+- Real-time чат с Socket.io
+- Видеозвонки (WebRTC)
+- Генерация сертификатов
+- JWT аутентификация + Google OAuth
+- Система подписок
+- AI ассистент для студентов
+- Dark Mode
+- Мультиязычность (i18n)
 
 ## Технологии
 
@@ -42,37 +42,7 @@
 - bcryptjs
 - PDF-lib (сертификаты)
 
-## Структура проекта
 
-```
-plathform/
-├── client/                 # React frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── components/    # React компоненты
-│   │   ├── pages/         # Страницы
-│   │   ├── context/       # React Context
-│   │   ├── hooks/         # Custom hooks
-│   │   ├── services/      # API сервисы
-│   │   └── data/          # Mock данные
-│   └── package.json
-│
-├── server/                 # Node.js backend
-│   ├── src/
-│   │   ├── controllers/   # Бизнес-логика
-│   │   ├── routes/        # API маршруты
-│   │   ├── models/        # Mongoose модели
-│   │   ├── services/      # Сервисы
-│   │   ├── middleware/    # Express middleware
-│   │   ├── utils/         # Утилиты
-│   │   ├── config/        # Конфигурация
-│   │   ├── sockets/       # Socket.io логика
-│   │   └── uploads/       # Загруженные файлы
-│   └── package.json
-│
-├── package.json           # Корень проекта
-└── README.md
-```
 
 ## Установка
 
@@ -168,20 +138,5 @@ docker-compose up --build
 | JWT_SECRET | Секрет JWT ключа | - |
 | CLIENT_URL | URL фронтенда | http://localhost:3000 |
 
-## Contribution
 
-1. Fork репозиторий
-2. Создайте feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit изменения (`git commit -m 'Add amazing feature'`)
-4. Push в branch (`git push origin feature/amazing-feature`)
-5. Создайте Pull Request
 
-## Лицензия
-
-MIT License - см. [LICENSE](LICENSE)
-
----
-
-<div align="center">
-Сделано с ❤️ для образовательных целей
-</div>
