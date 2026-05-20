@@ -120,12 +120,7 @@ npm run dev:client # Frontend: http://localhost:3000
 - `sendMessage` - Отправка сообщения
 - `call-user` - Начало видеозвонка
 
-## Docker (опционально)
 
-```bash
-# Запуск с Docker Compose
-docker-compose up --build
-```
 
 ## Переменные окружения
 
