@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: plathform-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: online_school
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - plathform-network
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: plathform-server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongodb:27017/online_school
+      - CLIENT_URL=http://localhost:3000
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
+    volumes:
+      - ./server/src/uploads:/app/src/uploads
+    networks:
+      - plathform-network
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    container_name: plathform-client
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    depends_on:
+      - server
+    networks:
+      - plathform-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  plathform-network:
+    driver: bridge

@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+client/node_modules
+server/node_modules
+
+# Build outputs
+client/build
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Git
+.git
+.gitignore
+
+# Docs
+docs
+README.md
+LICENSE
