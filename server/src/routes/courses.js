@@ -53,6 +53,14 @@ router.route('/')
     addCourse
   );
 
+// My courses route (static route must be before /:id)
+router.route('/my-courses')
+  .get(protect, getMyCourses);
+
+// Instructor courses route (static route must be before /:id)
+router.route('/instructor/:instructorId')
+  .get(getCoursesByInstructor);
+
 // Routes that operate on a specific course
 router.route('/:id')
   .get(getCourse)
@@ -86,14 +94,6 @@ router.route('/:id/enroll')
 
 router.route('/:id/unenroll')
   .delete(protect, unenrollFromCourse);
-
-// My courses route
-router.route('/my-courses')
-  .get(protect, getMyCourses);
-
-// Instructor courses route
-router.route('/instructor/:instructorId')
-  .get(getCoursesByInstructor);
 
 // Progress route
 router.route('/:id/progress')

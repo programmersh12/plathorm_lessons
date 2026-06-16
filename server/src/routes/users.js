@@ -8,7 +8,6 @@ const router = express.Router();
 
 // @desc    Получить всех пользователей
 // @route   GET /api/users
-// @access  Private/Admin
 // @access  Private (Admin only)
 router.get('/', protect, authorize('admin'), async (req, res) => {
   try {
@@ -57,7 +56,6 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
 // @desc    Получить одного пользователя
 // @route   GET /api/users/:id
 // @access  Private
-// @access  Private
 router.get('/:id', protect, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
@@ -100,8 +98,7 @@ router.get('/:id', protect, async (req, res) => {
 
 // @desc    Обновить пользователя
 // @route   PUT /api/users/:id
-// @access  Private/Owner/Admin
-// @access  Private
+// @access  Private (Owner/Admin)
 router.put('/:id', protect, [
   body('email').optional().isEmail().withMessage('Please provide a valid email'),
   body('firstName').optional().trim().isLength({ min: 1, max: 50 }).withMessage('First name must be between 1 and 50 characters'),
@@ -182,7 +179,6 @@ router.put('/:id', protect, [
 
 // @desc    Удалить пользователя
 // @route   DELETE /api/users/:id
-// @access  Private/Admin
 // @access  Private (Admin only)
 router.delete('/:id', protect, authorize('admin'), async (req, res) => {
   try {
@@ -195,7 +191,7 @@ router.delete('/:id', protect, authorize('admin'), async (req, res) => {
       });
     }
 
-    await user.remove();
+    await User.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success: true,
